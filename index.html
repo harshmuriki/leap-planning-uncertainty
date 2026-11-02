@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=17">
+  <link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
 
@@ -80,11 +80,9 @@
 <!-- ============ TEASER ============ -->
 <section class="section teaser">
   <div class="container">
-    <!-- TODO: replace with teaser video, e.g.
-         <video autoplay muted loop playsinline src="static/videos/teaser.mp4"></video> -->
-    <div class="placeholder media-16x9">
-      <span>Teaser video / figure placeholder<br><small>Habitat rollouts of the three planners on the same task variant</small></span>
-    </div>
+    <video class="teaser-video" src="static/videos/teaser.mp4" autoplay muted loop playsinline preload="auto"
+           aria-label="ReAct, VLM-TAMP and Tru-POMDP side by side on task T5 with outdated memory, 2x speed"></video>
+    <p class="video-note">ReAct, VLM-TAMP and Tru-POMDP on the same variant (T5 &middot; BASE &times; Outdated), 2&times; speed.</p>
     <p class="teaser-caption">
       An object remembered on a countertop may have been moved into a cabinet, replaced, or removed entirely.
       <strong>How do different planners respond when the robot's initial memory and the environment are varied systematically, within one shared execution framework?</strong>
@@ -139,7 +137,6 @@
       <div class="task" data-video="static/videos/t5.mp4"><div class="task-media"><video muted loop playsinline preload="none"></video><span class="task-media-ph">Rollout coming soon</span><span class="task-media-hint">Hover to play</span></div><span class="tid">T5</span><h4>Guest table preparation</h4><p>Get soap to clean both glasses, fill them, and place them on the living-room side table. Place a white plate next to them.</p></div>
       <div class="task" data-video="static/videos/t6.mp4"><div class="task-media"><video muted loop playsinline preload="none"></video><span class="task-media-ph">Rollout coming soon</span><span class="task-media-hint">Hover to play</span></div><span class="tid">T6</span><h4>Meal delivery</h4><p>Heat up the bread and bring it to the bedroom desk with a water bottle and a clean hand towel beside it. Turn off the living-room lights.</p></div>
       <div class="task" data-video="static/videos/t7.mp4"><div class="task-media"><video muted loop playsinline preload="none"></video><span class="task-media-ph">Rollout coming soon</span><span class="task-media-hint">Hover to play</span></div><span class="tid">T7</span><h4>Household cleanup</h4><p>Put away the living-room toys in the closet wardrobe, wash and put away the dirty dishes, and turn off the living-room and kitchen lights.</p></div>
-      <!-- TODO: add rollout clips as static/videos/t1.mp4 ... t7.mp4 (short, muted, ~5-10 MB max) -->
     </div>
 
     <h3>Variants = World &times; Memory</h3>
@@ -268,7 +265,7 @@
     <h3>ReAct leads, but every planner incurs extra actions</h3>
     <div class="headline">
       <div class="hl react"><span class="num">45.3%</span><span class="lbl">ReAct success</span><span class="sub">71.7% completion</span></div>
-      <div class="hl vlm"><span class="num">29.1%</span><span class="lbl">VLM-TAMP success</span><span class="sub">48.3% completion</span></div>
+      <div class="hl vlm"><span class="num">32.0%</span><span class="lbl">VLM-TAMP success</span><span class="sub">51.4% completion</span></div>
       <div class="hl tru"><span class="num">32.7%</span><span class="lbl">Tru-POMDP success</span><span class="sub">56.2% completion</span></div>
     </div>
     <figure>
@@ -283,8 +280,8 @@
           <caption>TC-SPL<sub>act</sub> under each initial-memory condition</caption>
           <thead><tr><th>Method</th><th>Accurate</th><th>Incomplete</th><th>Outdated</th></tr></thead>
           <tbody>
-            <tr class="vlm"><td>VLM-TAMP</td><td>0.34</td><td>0.39</td><td class="best">0.41</td></tr>
             <tr class="react"><td>ReAct</td><td class="best">0.71</td><td>0.55</td><td>0.52</td></tr>
+            <tr class="vlm"><td>VLM-TAMP</td><td>0.37</td><td>0.39</td><td class="best">0.43</td></tr>
             <tr class="tru"><td>Tru-POMDP</td><td>0.39</td><td>0.32</td><td class="best">0.47</td></tr>
           </tbody>
         </table>
@@ -302,7 +299,7 @@
       <img src="static/images/memory_uncertainity_averages_v2.png" alt="Change in TC-SPL_act from BASE across SUB, ABS, HID, and DIS for each planner" loading="lazy">
       <figcaption>&Delta;TC-SPL<sub>act</sub> from BASE in percentage points, averaged over memory conditions.
         <strong>Absent</strong> and <strong>hidden</strong> targets hurt every planner, ReAct most (&minus;14.0 and &minus;18.8 pts).
-        <strong>Substitutes</strong> and <strong>distractors</strong> split them: VLM-TAMP gains (+9.9, +12.4 pts), while Tru-POMDP drops with substitutes (&minus;12.7 pts).</figcaption>
+        <strong>Substitutes</strong> and <strong>distractors</strong> split them: VLM-TAMP gains (+9.9, +13.1 pts), while Tru-POMDP drops with substitutes (&minus;12.7 pts).</figcaption>
     </figure>
 
     <h3>Failure &amp; inefficiency analysis</h3>
@@ -312,33 +309,33 @@
       <div class="finding-scroll">
       <table class="finding-table">
         <caption>Failures <span>&middot; % of unsuccessful runs</span></caption>
-        <thead><tr><th>Finding</th><th class="vlm">VLM-TAMP<small>n=319</small></th><th class="react">ReAct<small>n=246</small></th><th class="tru">Tru-POMDP<small>n=303</small></th></tr></thead>
+        <thead><tr><th>Finding</th><th class="react">ReAct<small>n=246</small></th><th class="vlm">VLM-TAMP<small>n=306</small></th><th class="tru">Tru-POMDP<small>n=303</small></th></tr></thead>
         <tbody>
-          <tr><th scope="row" title="Found, but never put where the task needs it">Object not placed</th><td class="max" style="--h:94%">56.4</td><td style="--h:39%">23.6</td><td style="--h:75%">45.2</td></tr>
-          <tr><th scope="row" title="A required action (e.g. heat, switch off) was skipped">Missing action</th><td class="max" style="--h:77%">46.1</td><td style="--h:62%">37.4</td><td style="--h:60%">36.3</td></tr>
-          <tr><th scope="row" title="Object placed in the wrong location">Placement error</th><td style="--h:74%">44.5</td><td class="max" style="--h:90%">53.7</td><td style="--h:28%">16.5</td></tr>
-          <tr><th scope="row" title="A needed object was never found">Object not found</th><td class="max" style="--h:50%">30.1</td><td style="--h:33%">19.9</td><td style="--h:31%">18.5</td></tr>
-          <tr><th scope="row" title="Stuck, or kept executing without progress">Insufficient planning</th><td style="--h:21%">12.5</td><td style="--h:3%">1.6</td><td class="max" style="--h:29%">17.5</td></tr>
+          <tr><th scope="row" title="Found, but never put where the task needs it">Object not placed</th><td style="--h:39%">23.6</td><td class="max" style="--h:86%">51.3</td><td style="--h:75%">45.2</td></tr>
+          <tr><th scope="row" title="A required action (e.g. heat, switch off) was skipped">Missing action</th><td style="--h:62%">37.4</td><td class="max" style="--h:80%">48.0</td><td style="--h:60%">36.3</td></tr>
+          <tr><th scope="row" title="Object placed in the wrong location">Placement error</th><td class="max" style="--h:90%">53.7</td><td style="--h:66%">39.5</td><td style="--h:28%">16.5</td></tr>
+          <tr><th scope="row" title="A needed object was never found">Object not found</th><td style="--h:33%">19.9</td><td class="max" style="--h:55%">33.0</td><td style="--h:31%">18.5</td></tr>
+          <tr><th scope="row" title="Stuck, or kept executing without progress">Insufficient planning</th><td style="--h:3%">1.6</td><td style="--h:24%">14.7</td><td class="max" style="--h:29%">17.5</td></tr>
           <tr><th scope="row" title="Tree of Hypotheses returned no usable goals (Tru-POMDP only)">No hypotheses</th><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td><td class="max" style="--h:44%">26.4</td></tr>
-          <tr><th scope="row" title="Used a distractor instead of the task object">Wrong object</th><td style="--h:5%">2.8</td><td style="--h:3%">1.6</td><td class="max" style="--h:9%">5.3</td></tr>
-          <tr><th scope="row" title="A step was done after the step it had to precede">Wrong order</th><td style="--h:0%">0.0</td><td class="max" style="--h:9%">5.3</td><td style="--h:0%">0.0</td></tr>
-          <tr><th scope="row" title="Kept planning or searching after evidence said to abandon">Failure to stop</th><td style="--h:0%">0.0</td><td class="max" style="--h:6%">3.7</td><td style="--h:1%">0.7</td></tr>
+          <tr><th scope="row" title="Used a distractor instead of the task object">Wrong object</th><td style="--h:3%">1.6</td><td style="--h:6%">3.6</td><td class="max" style="--h:9%">5.3</td></tr>
+          <tr><th scope="row" title="A step was done after the step it had to precede">Wrong order</th><td class="max" style="--h:9%">5.3</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
+          <tr><th scope="row" title="Kept planning or searching after evidence said to abandon">Failure to stop</th><td class="max" style="--h:6%">3.7</td><td style="--h:0%">0.0</td><td style="--h:1%">0.7</td></tr>
         </tbody>
       </table>
       </div>
-      <figcaption>VLM-TAMP most often leaves objects unplaced (56.4%); ReAct makes the most placement errors (53.7%).</figcaption>
+      <figcaption>VLM-TAMP most often leaves objects unplaced (51.3%); ReAct makes the most placement errors (53.7%).</figcaption>
     </figure>
     <figure class="finding-fig">
       <div class="finding-scroll">
       <table class="finding-table">
         <caption>Inefficiencies <span>&middot; % of all runs</span></caption>
-        <thead><tr><th>Finding</th><th class="vlm">VLM-TAMP<small>n=450</small></th><th class="react">ReAct<small>n=450</small></th><th class="tru">Tru-POMDP<small>n=450</small></th></tr></thead>
+        <thead><tr><th>Finding</th><th class="react">ReAct<small>n=450</small></th><th class="vlm">VLM-TAMP<small>n=450</small></th><th class="tru">Tru-POMDP<small>n=450</small></th></tr></thead>
         <tbody>
-          <tr><th scope="row" title="No task, exploration, or recovery purpose">Unnecessary actions</th><td style="--h:37%">22.2</td><td style="--h:51%">30.4</td><td class="max" style="--h:87%">52.4</td></tr>
-          <tr><th scope="row" title="Tried an action without its prerequisites">Precondition error</th><td style="--h:20%">12.0</td><td class="max" style="--h:77%">46.0</td><td style="--h:38%">23.1</td></tr>
-          <tr><th scope="row" title="Same action or sequence several times in a row">Repeated actions</th><td style="--h:49%">29.3</td><td style="--h:4%">2.4</td><td class="max" style="--h:68%">41.1</td></tr>
-          <tr><th scope="row" title="Kept going after it should have stopped (successful runs)">Failure to stop</th><td style="--h:0%">0.0</td><td style="--h:4%">2.4</td><td class="max" style="--h:6%">3.6</td></tr>
-          <tr><th scope="row" title="Tried to use an object that does not exist">Hallucinated object</th><td style="--h:0%">0.0</td><td class="max" style="--h:0%">0.2</td><td style="--h:0%">0.0</td></tr>
+          <tr><th scope="row" title="No task, exploration, or recovery purpose">Unnecessary actions</th><td style="--h:44%">26.2</td><td style="--h:31%">18.4</td><td class="max" style="--h:87%">52.4</td></tr>
+          <tr><th scope="row" title="Tried an action without its prerequisites">Precondition error</th><td class="max" style="--h:77%">46.0</td><td style="--h:23%">13.8</td><td style="--h:38%">23.1</td></tr>
+          <tr><th scope="row" title="Same action or sequence several times in a row">Repeated actions</th><td style="--h:4%">2.4</td><td style="--h:50%">30.2</td><td class="max" style="--h:68%">41.1</td></tr>
+          <tr><th scope="row" title="Kept going after it should have stopped (successful runs)">Failure to stop</th><td style="--h:4%">2.4</td><td style="--h:0%">0.0</td><td class="max" style="--h:6%">3.6</td></tr>
+          <tr><th scope="row" title="Tried to use an object that does not exist">Hallucinated object</th><td class="max" style="--h:0%">0.2</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
         </tbody>
       </table>
       </div>
@@ -369,11 +366,20 @@
 <section class="section" id="rollouts">
   <div class="container">
     <h2>Example Rollouts</h2>
-    <!-- TODO: replace each placeholder with a <video> clip from Habitat -->
+    <p class="lede">All three planners succeed on the same variant, <strong>T5 &middot; BASE &times; Outdated</strong> (guest table preparation; memory has the soap, one glass and the plate at stale locations), each in its own way.</p>
     <div class="video-grid">
-      <div class="placeholder media-16x9"><span>ReAct &middot; T1 &middot; HID &times; Outdated</span></div>
-      <div class="placeholder media-16x9"><span>VLM-TAMP &middot; T1 &middot; HID &times; Outdated</span></div>
-      <div class="placeholder media-16x9"><span>Tru-POMDP &middot; T1 &middot; HID &times; Outdated</span></div>
+      <figure class="rollout react">
+        <video src="static/videos/rollout_react_t5_base_outdated.mp4" controls muted loop playsinline preload="metadata"></video>
+        <figcaption>ReAct</figcaption>
+      </figure>
+      <figure class="rollout vlm">
+        <video src="static/videos/rollout_vlmtamp_t5_base_outdated.mp4" controls muted loop playsinline preload="metadata"></video>
+        <figcaption>VLM-TAMP</figcaption>
+      </figure>
+      <figure class="rollout tru">
+        <video src="static/videos/rollout_trupomdp_t5_base_outdated.mp4" controls muted loop playsinline preload="metadata"></video>
+        <figcaption>Tru-POMDP</figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -426,6 +432,6 @@
   </div>
 </footer>
 
-<script src="main.js?v=5"></script>
+<script src="main.js?v=6"></script>
 </body>
 </html>

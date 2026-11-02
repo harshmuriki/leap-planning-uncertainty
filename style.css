@@ -125,6 +125,8 @@ h4 { margin: 0 0 6px; font-size: 17px; }
 .media-16x9 { aspect-ratio: 16 / 9; }
 
 .teaser { padding-top: 8px; }
+.teaser-video { width: 100%; display: block; border-radius: var(--radius); background: #000; box-shadow: var(--shadow); }
+.video-note { text-align: center; font-size: 13.5px; color: var(--muted); margin: 8px 0 0; }
 .teaser-caption { max-width: 820px; margin: 20px auto 0; text-align: center; color: var(--muted); }
 .teaser-caption strong { color: var(--text); font-weight: 600; }
 
@@ -322,7 +324,10 @@ figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
 
 /* ---------- rollouts ---------- */
 .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.video-grid video { width: 100%; border-radius: var(--radius); }
+.video-grid { margin-top: 20px; }
+.rollout { margin: 0; }
+.rollout video { width: 100%; display: block; border-radius: var(--radius); background: #000; border-top: 4px solid var(--c); }
+.rollout figcaption { font-weight: 600; color: var(--c); font-size: 15px; margin-top: 6px; }
 
 /* ---------- bibtex ---------- */
 .bib { position: relative; }
