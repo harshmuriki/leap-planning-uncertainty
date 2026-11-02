@@ -50,36 +50,35 @@ img { max-width: 100%; display: block; }
 .nav-links a { color: var(--muted); }
 .nav-links a:hover, .nav-links a.active { color: var(--text); text-decoration: none; }
 
-/* ---------- icon nav (right edge, 860px and up) ---------- */
+/* ---------- icon + label rail (right edge, 860px and up) ---------- */
 .dotnav { display: none; }
 @media (min-width: 860px) {
   .topnav { display: none; }
   html { scroll-padding-top: 16px; }
   .dotnav {
-    display: flex; flex-direction: column; gap: 2px;
-    position: fixed; right: 10px; top: 50%; transform: translateY(-50%); z-index: 10;
+    display: flex; flex-direction: column; gap: 4px;
+    position: fixed; right: 8px; top: 50%; transform: translateY(-50%); z-index: 10;
+    width: 72px;
   }
   .dotnav a {
-    position: relative; display: flex; align-items: center; justify-content: center;
-    width: 34px; height: 34px; border-radius: 50%; color: var(--muted); transition: all .2s;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 3px 0; color: var(--muted);
   }
-  .dotnav a:hover { text-decoration: none; color: var(--accent); background: var(--bg-alt); }
-  .dotnav a.active { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
-  .nav-icon { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-  .dot-label {
-    font-size: 12.5px; font-weight: 500; color: var(--text); white-space: nowrap;
-    background: var(--bg); padding: 2px 8px; border-radius: 4px; box-shadow: var(--shadow);
-    position: absolute; right: 40px; top: 50%; transform: translate(6px, -50%);
-    opacity: 0; transition: all .2s; pointer-events: none;
+  .dotnav a:hover { text-decoration: none; color: var(--text); }
+  .nav-icon {
+    order: -1; box-sizing: content-box; width: 16px; height: 16px; padding: 6px; border-radius: 50%;
+    fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+    transition: background .2s, color .2s;
   }
-  .dotnav a:hover .dot-label { opacity: 1; transform: translate(0, -50%); }
-  /* keep content clear of the icons */
-  .container { padding-left: 60px; padding-right: 60px; }
+  .dotnav a:hover .nav-icon { background: var(--bg-alt); }
+  .dot-label { font-size: 10.5px; line-height: 1.2; font-weight: 500; white-space: nowrap; }
+  .dotnav a.active { color: var(--accent); }
+  .dotnav a.active .nav-icon { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .dotnav a.active .dot-label { font-weight: 700; }
 }
-/* wide screens have room in the margin to keep the current section's name visible */
-@media (min-width: 1240px) {
-  .dotnav a.active .dot-label { opacity: 1; transform: translate(0, -50%); }
-  .dotnav:hover a.active:not(:hover) .dot-label { opacity: 0; }
+/* keep content clear of the rail until the side margin is wide enough */
+@media (min-width: 860px) and (max-width: 1279px) {
+  .container { padding-left: 48px; padding-right: 92px; }
 }
 
 /* ---------- hero ---------- */
