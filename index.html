@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=19">
+  <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 
@@ -38,7 +38,6 @@
   <a href="#planners" aria-label="Planners"><span class="dot-label">Planners</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg></a>
   <a href="#results" aria-label="Results"><span class="dot-label">Results</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></a>
   <a href="#takeaways" aria-label="Takeaways"><span class="dot-label">Takeaways</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg></a>
-  <a href="#rollouts" aria-label="Rollouts"><span class="dot-label">Rollouts</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4z"/></svg></a>
   <a href="#bibtex" aria-label="BibTeX"><span class="dot-label">BibTeX</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h5v5c0 3-2 5-5 6M15 8h5v5c0 3-2 5-5 6"/></svg></a>
   <a href="#references" aria-label="References"><span class="dot-label">References</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></a>
 </nav>
@@ -80,9 +79,16 @@
 <!-- ============ TEASER ============ -->
 <section class="section teaser">
   <div class="container">
-    <video class="teaser-video" src="static/videos/teaser.mp4" autoplay muted loop playsinline preload="auto"
-           aria-label="ReAct, VLM-TAMP and Tru-POMDP side by side on task T5 with outdated memory, 2x speed"></video>
-    <p class="video-note">ReAct, VLM-TAMP and Tru-POMDP on the same variant (T5 &middot; BASE &times; Outdated), 2&times; speed.</p>
+    <div class="compare">
+      <div class="compare-stage">
+      <video class="react" src="static/videos/rollout_react_t5_base_outdated.mp4" muted playsinline preload="auto" aria-label="ReAct rollout on T5, outdated memory"></video>
+      <video class="vlm" src="static/videos/rollout_vlmtamp_t5_base_outdated.mp4" muted playsinline preload="metadata" aria-label="VLM-TAMP rollout on T5, outdated memory"></video>
+      <video class="tru" src="static/videos/rollout_trupomdp_t5_base_outdated.mp4" muted playsinline preload="metadata" aria-label="Tru-POMDP rollout on T5, outdated memory"></video>
+        <span class="compare-badge">T5 &middot; BASE &times; Outdated &middot; 2&times;</span>
+      </div>
+      <div class="compare-tabs"><button type="button" class="compare-tab react" data-actions="31"><span class="tab-progress"></span>ReAct</button><button type="button" class="compare-tab vlm" data-actions="31"><span class="tab-progress"></span>VLM-TAMP</button><button type="button" class="compare-tab tru" data-actions="28"><span class="tab-progress"></span>Tru-POMDP</button></div>
+      <p class="video-note">Guest table preparation with stale memory of the soap, a glass and the plate. All three planners succeed &mdash; <span class="compare-stat"></span> (reference: 24).</p>
+    </div>
     <p class="teaser-caption">
       An object remembered on a countertop may have been moved into a cabinet, replaced, or removed entirely.
       <strong>How do different planners respond when the robot's initial memory and the environment are varied systematically, within one shared execution framework?</strong>
@@ -391,28 +397,6 @@
   </div>
 </section>
 
-<!-- ============ ROLLOUTS ============ -->
-<section class="section" id="rollouts">
-  <div class="container">
-    <h2>Example Rollouts</h2>
-    <p class="lede">All three planners succeed on the same variant, <strong>T5 &middot; BASE &times; Outdated</strong> (guest table preparation; memory has the soap, one glass and the plate at stale locations), each in its own way.</p>
-    <div class="video-grid">
-      <figure class="rollout react">
-        <video src="static/videos/rollout_react_t5_base_outdated.mp4" controls autoplay muted loop playsinline preload="auto"></video>
-        <figcaption>ReAct</figcaption>
-      </figure>
-      <figure class="rollout vlm">
-        <video src="static/videos/rollout_vlmtamp_t5_base_outdated.mp4" controls autoplay muted loop playsinline preload="auto"></video>
-        <figcaption>VLM-TAMP</figcaption>
-      </figure>
-      <figure class="rollout tru">
-        <video src="static/videos/rollout_trupomdp_t5_base_outdated.mp4" controls autoplay muted loop playsinline preload="auto"></video>
-        <figcaption>Tru-POMDP</figcaption>
-      </figure>
-    </div>
-  </div>
-</section>
-
 <!-- ============ BIBTEX ============ -->
 <section class="section alt" id="bibtex">
   <div class="container narrow">
@@ -461,6 +445,6 @@
   </div>
 </footer>
 
-<script src="main.js?v=7"></script>
+<script src="main.js?v=8"></script>
 </body>
 </html>

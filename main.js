@@ -12,6 +12,47 @@ document.querySelectorAll('.copy-btn').forEach((btn) => {
   });
 });
 
+// Hero comparison: one rollout at a time at 2x, cycling ReAct -> VLM-TAMP ->
+// Tru-POMDP. The tabs switch planner (restarting its clip); clicking the video pauses.
+const compare = document.querySelector('.compare');
+if (compare) {
+  const videos = [...compare.querySelectorAll('.compare-stage video')];
+  const tabs = [...compare.querySelectorAll('.compare-tab')];
+  const stat = compare.querySelector('.compare-stat');
+  const keys = ['react', 'vlm', 'tru'];
+  let active = 0;
+  let paused = false;
+  let inView = true;
+
+  const sync = () => videos.forEach((v, i) => {
+    if (i === active && inView && !paused) { v.playbackRate = 2; v.play().catch(() => {}); }
+    else v.pause();
+  });
+
+  const show = (i) => {
+    tabs[active].firstChild.style.width = '0';
+    active = (i + videos.length) % videos.length;
+    videos.forEach((v, j) => { v.classList.toggle('active', j === active); v.currentTime = 0; });
+    tabs.forEach((t, j) => { t.classList.toggle('active', j === active); t.setAttribute('aria-pressed', j === active); });
+    compare.classList.remove(...keys);
+    compare.classList.add(keys[active]);
+    stat.textContent = `${tabs[active].textContent}: ${tabs[active].dataset.actions} actions`;
+    paused = false;
+    sync();
+  };
+
+  videos.forEach((v, i) => {
+    v.addEventListener('timeupdate', () => {
+      if (i === active && v.duration) tabs[i].firstChild.style.width = (100 * v.currentTime / v.duration) + '%';
+    });
+    v.addEventListener('ended', () => { if (i === active) show(i + 1); });
+  });
+  tabs.forEach((t, i) => t.addEventListener('click', () => show(i)));
+  compare.querySelector('.compare-stage').addEventListener('click', () => { paused = !paused; sync(); });
+  new IntersectionObserver(([e]) => { inView = e.isIntersecting; sync(); }, { threshold: 0.3 }).observe(compare);
+  show(0);
+}
+
 // Task carousel: the centred slide plays its rollout, then advances to the next
 // task when the clip ends. Arrows, T1-T7 tabs, swipe/scroll and arrow keys all
 // move it manually; the pause button stops playback and auto-advance.
