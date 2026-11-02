@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
 
@@ -307,16 +307,42 @@
 
     <h3>Failure &amp; inefficiency analysis</h3>
     <p>Rule-based analysis of execution traces, following prior embodied-agent error analyses<a class="cite" href="#ref-10">[10, 11]</a>. Categories overlap, so rates need not sum to 100%.</p>
-    <div class="two-col">
-      <figure>
-        <img src="static/images/failure_findings_v3.png" alt="Failure-finding rates across planners" loading="lazy">
-        <figcaption>Failure findings, as % of <em>unsuccessful</em> episodes. VLM-TAMP most often leaves objects unplaced (56.4%); ReAct makes the most placement errors (53.7%).</figcaption>
-      </figure>
-      <figure>
-        <img src="static/images/inefficiency_findings_v3.png" alt="Inefficiency-finding rates across planners" loading="lazy">
-        <figcaption>Inefficiency findings, as % of <em>all</em> episodes. ReAct has the most precondition errors (46.0%); Tru-POMDP the most unnecessary (52.4%) and repeated (41.1%) actions.</figcaption>
-      </figure>
-    </div>
+    <figure class="finding-fig">
+      <div class="finding-scroll">
+      <table class="finding-table">
+        <caption>Failures <span>&middot; % of unsuccessful runs</span></caption>
+        <thead><tr><th>Finding</th><th class="vlm">VLM-TAMP<small>n=319</small></th><th class="react">ReAct<small>n=246</small></th><th class="tru">Tru-POMDP<small>n=303</small></th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Object not placed<small>Found, but never put where the task needs it</small></th><td class="max" style="--h:94%">56.4</td><td style="--h:39%">23.6</td><td style="--h:75%">45.2</td></tr>
+          <tr><th scope="row">Missing action<small>A required action (e.g. heat, switch off) was skipped</small></th><td class="max" style="--h:77%">46.1</td><td style="--h:62%">37.4</td><td style="--h:60%">36.3</td></tr>
+          <tr><th scope="row">Placement error<small>Object placed in the wrong location</small></th><td style="--h:74%">44.5</td><td class="max" style="--h:90%">53.7</td><td style="--h:28%">16.5</td></tr>
+          <tr><th scope="row">Object not found<small>A needed object was never found</small></th><td class="max" style="--h:50%">30.1</td><td style="--h:33%">19.9</td><td style="--h:31%">18.5</td></tr>
+          <tr><th scope="row">Insufficient planning<small>Stuck, or kept executing without progress</small></th><td style="--h:21%">12.5</td><td style="--h:3%">1.6</td><td class="max" style="--h:29%">17.5</td></tr>
+          <tr><th scope="row">No hypotheses<small>Tree of Hypotheses returned no usable goals (Tru-POMDP only)</small></th><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td><td class="max" style="--h:44%">26.4</td></tr>
+          <tr><th scope="row">Wrong object<small>Used a distractor instead of the task object</small></th><td style="--h:5%">2.8</td><td style="--h:3%">1.6</td><td class="max" style="--h:9%">5.3</td></tr>
+          <tr><th scope="row">Wrong order<small>A step was done after the step it had to precede</small></th><td style="--h:0%">0.0</td><td class="max" style="--h:9%">5.3</td><td style="--h:0%">0.0</td></tr>
+          <tr><th scope="row">Failure to stop<small>Kept planning or searching after evidence said to abandon</small></th><td style="--h:0%">0.0</td><td class="max" style="--h:6%">3.7</td><td style="--h:1%">0.7</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <figcaption>VLM-TAMP most often leaves objects unplaced (56.4%); ReAct makes the most placement errors (53.7%). Darker = more frequent; bold = highest in the row.</figcaption>
+    </figure>
+    <figure class="finding-fig">
+      <div class="finding-scroll">
+      <table class="finding-table">
+        <caption>Inefficiencies <span>&middot; % of all runs</span></caption>
+        <thead><tr><th>Finding</th><th class="vlm">VLM-TAMP<small>n=450</small></th><th class="react">ReAct<small>n=450</small></th><th class="tru">Tru-POMDP<small>n=450</small></th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Unnecessary actions<small>No task, exploration, or recovery purpose</small></th><td style="--h:37%">22.2</td><td style="--h:51%">30.4</td><td class="max" style="--h:87%">52.4</td></tr>
+          <tr><th scope="row">Precondition error<small>Tried an action without its prerequisites</small></th><td style="--h:20%">12.0</td><td class="max" style="--h:77%">46.0</td><td style="--h:38%">23.1</td></tr>
+          <tr><th scope="row">Repeated actions<small>Same action or sequence several times in a row</small></th><td style="--h:49%">29.3</td><td style="--h:4%">2.4</td><td class="max" style="--h:68%">41.1</td></tr>
+          <tr><th scope="row">Failure to stop<small>Kept going after it should have stopped (successful runs)</small></th><td style="--h:0%">0.0</td><td style="--h:4%">2.4</td><td class="max" style="--h:6%">3.6</td></tr>
+          <tr><th scope="row">Hallucinated object<small>Tried to use an object that does not exist</small></th><td style="--h:0%">0.0</td><td class="max" style="--h:0%">0.2</td><td style="--h:0%">0.0</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <figcaption>ReAct has the most precondition errors (46.0%); Tru-POMDP the most unnecessary (52.4%) and repeated (41.1%) actions.</figcaption>
+    </figure>
   </div>
 </section>
 
