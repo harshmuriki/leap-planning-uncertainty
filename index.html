@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
 
@@ -231,22 +231,31 @@
       memory, goal, scene graph, images (except Tru-POMDP), and the same 12 high-level robot skills.
       Every planner uses GPT-5.6 Luna with high reasoning effort.
     </p>
-    <!-- TODO: optional, add an architecture/pipeline diagram here -->
-    <div class="planners">
-      <div class="planner react">
-        <h4>ReAct<a class="cite" href="#ref-6">[6]</a></h4>
-        <p class="sub">A VLM picks every next skill</p>
-        <p>Extends PARTNR-Planner's<a class="cite" href="#ref-4">[4]</a> zero-shot ReAct with visual observations. At each step a VLM reasons over the instruction, world graph, images, and action history, then selects the next skill; execution feedback informs the next decision.</p>
+    <img class="diagram-legend" src="static/images/diagram_legend.png" alt="Legend: solid line is plan or action, dashed line is failure signal, dotted line is observation or progress" loading="lazy">
+    <div class="planner-rows">
+      <div class="planner-row react">
+        <div class="planner-text">
+          <h4>ReAct<a class="cite" href="#ref-6">[6]</a></h4>
+          <p class="sub">A VLM picks every next skill</p>
+          <p>Extends PARTNR-Planner&rsquo;s<a class="cite" href="#ref-4">[4]</a> zero-shot ReAct with visual observations. At each step a VLM reasons over the instruction, world graph, images, and action history, then selects the next skill; execution feedback informs the next decision.</p>
+        </div>
+        <img class="planner-diagram" src="static/images/diagram_react.png" alt="ReAct loop: the VLM sends the next action to the robot in Habitat; observations and execution failures feed back to the VLM" loading="lazy">
       </div>
-      <div class="planner vlm">
-        <h4>VLM-TAMP<a class="cite" href="#ref-7">[7]</a></h4>
-        <p class="sub">VLM subgoals, refined by a PDDL planner</p>
-        <p>A VLM proposes intermediate subgoals as grounded predicates; a symbolic planner with a hand-crafted PDDL<a class="cite" href="#ref-8">[8]</a> domain turns each into a skill sequence. Failures trigger symbolic replanning or subgoal revision.</p>
+      <div class="planner-row vlm">
+        <div class="planner-text">
+          <h4>VLM-TAMP<a class="cite" href="#ref-7">[7]</a></h4>
+          <p class="sub">VLM subgoals, refined by a PDDL planner</p>
+          <p>A VLM proposes intermediate subgoals as grounded predicates; a symbolic planner with a hand-crafted PDDL<a class="cite" href="#ref-8">[8]</a> domain turns each into a skill sequence. Failures trigger symbolic replanning or subgoal revision.</p>
+        </div>
+        <img class="planner-diagram" src="static/images/diagram_vlmtamp.png" alt="VLM-TAMP pipeline: VLM to subgoal iterator to PDDL planner to robot; execution failures return to the PDDL planner, failure context to the VLM, and subgoal completion to the iterator" loading="lazy">
       </div>
-      <div class="planner tru">
-        <h4>Tru-POMDP<a class="cite" href="#ref-9">[9]</a></h4>
-        <p class="sub">Belief-space search over LLM hypotheses</p>
-        <p>An LLM Tree of Hypotheses builds a weighted particle belief over goals and unobserved object locations; a DESPOT-style search picks actions, and the belief updates after each one.</p>
+      <div class="planner-row tru">
+        <div class="planner-text">
+          <h4>Tru-POMDP<a class="cite" href="#ref-9">[9]</a></h4>
+          <p class="sub">Belief-space search over LLM hypotheses</p>
+          <p>An LLM Tree of Hypotheses builds a weighted particle belief over goals and unobserved object locations; a DESPOT-style search picks actions, and the belief updates after each one.</p>
+        </div>
+        <img class="planner-diagram" src="static/images/diagram_trupomdp.png" alt="Tru-POMDP loop: LLM Tree of Hypotheses to particle belief to belief-space planner to robot; observations and actions drive a belief update, which can regenerate hypotheses" loading="lazy">
       </div>
     </div>
   </div>
