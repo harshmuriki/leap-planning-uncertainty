@@ -83,6 +83,7 @@ img { max-width: 100%; display: block; }
 
 /* ---------- hero ---------- */
 .hero { padding: 72px 0 40px; }
+a.venue:hover { text-decoration: none; border-color: var(--accent); }
 .venue {
   display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: .04em;
   text-transform: uppercase; color: var(--accent);
