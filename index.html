@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Evaluating Long-Horizon Robot Planning under Uncertainty</title>
+  <meta name="description" content="A benchmark of seven long-horizon household tasks in Habitat that vary initial robot memory and environment configurations, evaluating ReAct, VLM-TAMP, and Tru-POMDP across 1,350 episodes.">
+  <!-- TODO: set og:url and og:image once the site is hosted -->
+  <meta property="og:title" content="Evaluating Long-Horizon Robot Planning under Uncertainty">
+  <meta property="og:description" content="CoRL 2026 LEAP Workshop. Benchmarking ReAct, VLM-TAMP, and Tru-POMDP under memory and environment uncertainty.">
+  <meta property="og:image" content="static/images/overall_metrics_v2.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=4">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="#top" class="brand">Long-Horizon Planning under Uncertainty</a>
+    <div class="nav-links">
+      <a href="#abstract">Abstract</a>
+      <a href="#benchmark">Benchmark</a>
+      <a href="#planners">Planners</a>
+      <a href="#results">Results</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="container narrow center">
+    <span class="venue">CoRL 2026 &middot; LEAP Workshop</span>
+    <h1>Evaluating Long-Horizon Robot Planning under Uncertainty</h1>
+    <p class="authors">
+      <!-- TODO: add personal website links to each author -->
+      <a href="#">Harsh Muriki</a><sup>*</sup>,&nbsp;
+      <a href="#">Gayathri Aravindan</a>,&nbsp;
+      <a href="#">Yuchen Zheng</a>,&nbsp;
+      <a href="#">Sonia Chernova</a>
+    </p>
+    <p class="affil">Georgia Institute of Technology &nbsp;&middot;&nbsp; <sup>*</sup>Corresponding author</p>
+
+    <div class="links">
+      <a class="btn" href="static/paper.pdf" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Paper
+      </a>
+      <!-- TODO: replace with arXiv link -->
+      <a class="btn placeholder-btn" href="#" title="Coming soon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>arXiv
+      </a>
+      <!-- TODO: export poster to PDF and update this link -->
+      <a class="btn" href="static/poster.pptx" download>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Poster
+      </a>
+      <!-- TODO: replace with GitHub repo link -->
+      <a class="btn placeholder-btn" href="#" title="Coming soon">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Code
+      </a>
+      <a class="btn" href="#bibtex">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>BibTeX
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ TEASER ============ -->
+<section class="section teaser">
+  <div class="container">
+    <!-- TODO: replace with teaser video, e.g.
+         <video autoplay muted loop playsinline src="static/videos/teaser.mp4"></video> -->
+    <div class="placeholder media-16x9">
+      <span>Teaser video / figure placeholder<br><small>Habitat rollouts of the three planners on the same task variant</small></span>
+    </div>
+    <p class="teaser-caption">
+      An object remembered on a countertop may have been moved into a cabinet, replaced, or removed entirely.
+      <strong>How do different planners respond when the robot's initial memory and the environment are varied systematically, within one shared execution framework?</strong>
+    </p>
+  </div>
+</section>
+
+<!-- ============ ABSTRACT ============ -->
+<section class="section alt" id="abstract">
+  <div class="container narrow">
+    <h2>Abstract</h2>
+    <p class="abstract">
+      Household robots must successfully navigate imperfect circumstances, both in their internal models and the external world.
+      We introduce a benchmark of seven long-horizon household tasks in Habitat that vary initial robot memory and environment configurations.
+      We evaluate adaptations of ReAct, VLM-TAMP, and Tru-POMDP within a shared execution framework across 90 task&ndash;environment&ndash;memory combinations, totaling 1,350 episodes.
+      Our evaluation measures task success, partial completion, and action efficiency, along with rule-based analysis of execution traces.
+      ReAct achieves the highest overall task success (45.3%) and completion (71.7%), while having accurate initial memory does not consistently yield the highest performance for every planner.
+      We identify recurring placement errors, precondition errors, and redundant actions through trace analysis.
+      These findings highlight differences in how the evaluated planners use initial knowledge and respond to environmental variation.
+      <!-- TODO: abstract's last sentence was truncated in the .tex; check against the camera-ready -->
+    </p>
+
+    <div class="stats">
+      <div class="stat"><span class="num">7</span><span class="lbl">long-horizon tasks</span></div>
+      <div class="stat"><span class="num">90</span><span class="lbl">task &times; env &times; memory variants</span></div>
+      <div class="stat"><span class="num">3</span><span class="lbl">planner adaptations</span></div>
+      <div class="stat"><span class="num">1,350</span><span class="lbl">episodes</span></div>
+    </div>
+
+    <h3>Contributions</h3>
+    <ul class="contrib">
+      <li>A benchmark of seven long-horizon household tasks with controlled variations in initial robot memory and environmental conditions.</li>
+      <li>A comparative evaluation of three planner adaptations across 1,350 episodes using success, completion, and action-efficiency metrics.</li>
+      <li>A trace-based analysis identifying recurring failure and inefficiency patterns.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ BENCHMARK ============ -->
+<section class="section" id="benchmark">
+  <div class="container">
+    <h2>The Benchmark</h2>
+    <p class="lede">
+      Seven long-horizon household tasks in Habitat Sim<a class="cite" href="#ref-1">[1&ndash;3]</a>, executed with PARTNR's<a class="cite" href="#ref-4">[4]</a> shared high-level robot skills.
+      Each task spans multiple rooms and furniture, involving object transport, spatial placement, and object-state changes.
+    </p>
+
+    <div class="tasks">
+      <div class="task" data-video="static/videos/t1.mp4"><div class="task-media"><video muted loop playsinline preload="none"></video><span class="task-media-ph">Rollout coming soon</span><span class="task-media-hint">Hover to play</span></div><span class="tid">T1</span><h4>Water fetching</h4><p>Turn off all the lights in the bedroom and bring a full jug of water to either of the two living-room tables.</p></div>
+      <div class="task" data-video="static/videos/t2.mp4"><div class="task-media"><video muted loop playsinline preload="none"></video><span class="task-media-ph">Rollout coming soon</span><span class="task-media-hint">Hover to play</span></div><span class="tid">T2</span><h4>Package preparation</h4><p>Move both packages to the living-room center table and place them next to each other. Bring the scissors and place them beside the packages.</p></div>
+      <div class="task" data-video="static/videos/t3.mp4"><div class="task-media"><video muted loop playsinline preload="none"></video><span class="task-media-ph">Rollout coming soon</span><span class="task-media-hint">Hover to play</span></div><span class="tid">T3</span><h4>Book collection</h4><p>Collect the 2 green books, place them on the living-room side table, and turn off the laptop.</p></div>
+      <div class="task" data-video="static/videos/t4.mp4"><div class="task-media"><video muted loop playsinline preload="none"></video><span class="task-media-ph">Rollout coming soon</span><span class="task-media-hint">Hover to play</span></div><span class="tid">T4</span><h4>Grocery organization</h4><p>Put all 3 fruits in the fruit basket and the 2 drink containers on the kitchen counter.</p></div>
+      <div class="task" data-video="static/videos/t5.mp4"><div class="task-media"><video muted loop playsinline preload="none"></video><span class="task-media-ph">Rollout coming soon</span><span class="task-media-hint">Hover to play</span></div><span class="tid">T5</span><h4>Guest table preparation</h4><p>Get soap to clean both glasses, fill them, and place them on the living-room side table. Place a white plate next to them.</p></div>
+      <div class="task" data-video="static/videos/t6.mp4"><div class="task-media"><video muted loop playsinline preload="none"></video><span class="task-media-ph">Rollout coming soon</span><span class="task-media-hint">Hover to play</span></div><span class="tid">T6</span><h4>Meal delivery</h4><p>Heat up the bread and bring it to the bedroom desk with a water bottle and a clean hand towel beside it. Turn off the living-room lights.</p></div>
+      <div class="task" data-video="static/videos/t7.mp4"><div class="task-media"><video muted loop playsinline preload="none"></video><span class="task-media-ph">Rollout coming soon</span><span class="task-media-hint">Hover to play</span></div><span class="tid">T7</span><h4>Household cleanup</h4><p>Put away the living-room toys in the closet wardrobe, wash and put away the dirty dishes, and turn off the living-room and kitchen lights.</p></div>
+      <!-- TODO: add rollout clips as static/videos/t1.mp4 ... t7.mp4 (short, muted, ~5-10 MB max) -->
+    </div>
+
+    <h3>Variants = World &times; Memory</h3>
+    <p>
+      Each episode pairs one <strong>environment configuration</strong> (what is actually true in the world) with one
+      <strong>initial memory condition</strong> (what the robot believes at the start), giving up to 15 variants per task.
+      Below is the full grid for <strong>T1</strong>.
+    </p>
+
+    <div class="variant-task">
+      <span class="tid">T1</span>
+      <span>&ldquo;Turn off all the lights in the master bedroom and bring a full jug of water to the living-room table.&rdquo;</span>
+      <span class="variant-target">Uncertainty target: <strong>jug</strong> &middot; acceptable substitute: <strong>pitcher</strong></span>
+    </div>
+
+    <div class="variant-scroll">
+      <table class="variant-grid">
+        <thead>
+          <tr>
+            <th class="corner"><span class="axis-col">World &rarr;</span><span class="axis-row">Memory &darr;</span></th>
+            <th><span class="tag">BASE</span><small>Jug on counter</small></th>
+            <th><span class="tag">SUB</span><small>Only a pitcher</small></th>
+            <th><span class="tag">ABS</span><small>No container</small></th>
+            <th><span class="tag">HID</span><small>Jug in fridge</small></th>
+            <th><span class="tag">DIS</span><small>Jug + vase, spray bottle</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="m-acc">
+            <th class="mem-head">Accurate</th>
+            <td class="baseline"><span class="base-label">Baseline</span>Jug on counter</td>
+            <td>Pitcher available</td>
+            <td>Nothing available</td>
+            <td>Jug in fridge</td>
+            <td>Jug + distractors</td>
+          </tr>
+          <tr class="m-inc">
+            <th class="mem-head">Incomplete</th>
+            <td>No jug info</td>
+            <td>No pitcher info</td>
+            <td>Can&rsquo;t tell</td>
+            <td>No jug info</td>
+            <td>No jug info</td>
+          </tr>
+          <tr class="m-out">
+            <th class="mem-head">Outdated</th>
+            <td>Jug on dining table</td>
+            <td>Jug on dining table</td>
+            <td>Jug on dining table</td>
+            <td class="highlight">Jug on dining table</td>
+            <td>Jug on dining table</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid-legend">
+      <span>Cells show what the robot <em>believes</em> at the start.</span>
+      <span class="lg m-acc"><i></i>Accurate: matches the world</span>
+      <span class="lg m-inc"><i></i>Incomplete: information missing</span>
+      <span class="lg m-out"><i></i>Outdated: stale and wrong</span>
+    </div>
+    <p class="grid-note">Outlined: the HID &times; Outdated example, where the jug is in the fridge but the robot remembers it on the dining table. In ABS, criteria needing the unavailable object are excluded.</p>
+
+    <h3>Metrics</h3>
+    <div class="metrics">
+      <div class="metric">
+        <h4>Task success &amp; completion</h4>
+        <p>Completion <code>C<sub>i</sub></code> is the fraction of evaluation criteria satisfied; success <code>S<sub>i</sub> = 1</code> only if all are satisfied.</p>
+      </div>
+      <div class="metric">
+        <h4>SPL<sub>act</sub></h4>
+        <p>Adapts SPL<a class="cite" href="#ref-5">[5]</a> to count skill attempts instead of path length, relative to a human reference: <code>S<sub>i</sub> &middot; A<sub>i</sub><sup>ref</sup> / max(A<sub>i</sub>, A<sub>i</sub><sup>ref</sup>)</code>.</p>
+      </div>
+      <div class="metric">
+        <h4>TC-SPL<sub>act</sub></h4>
+        <p>Replaces binary success with completion <code>C<sub>i</sub></code>, rewarding partial progress while penalizing extra skill attempts. 1 = as efficient as a human.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLANNERS ============ -->
+<section class="section alt" id="planners">
+  <div class="container">
+    <h2>Three Planners, One Framework</h2>
+    <p class="lede">
+      All three approaches are re-implemented on Habitat with PARTNR's skills and share the same inputs:
+      memory, goal, scene graph, images (except Tru-POMDP), and the same 12 high-level robot skills.
+      Every planner uses GPT-5.6 Luna with high reasoning effort.
+    </p>
+    <!-- TODO: optional, add an architecture/pipeline diagram here -->
+    <div class="planners">
+      <div class="planner react">
+        <h4>ReAct<a class="cite" href="#ref-6">[6]</a></h4>
+        <p class="sub">A VLM picks every next skill</p>
+        <p>Extends PARTNR-Planner's<a class="cite" href="#ref-4">[4]</a> zero-shot ReAct with visual observations. At each step a VLM reasons over the instruction, world graph, images, and action history, then selects the next skill; execution feedback informs the next decision.</p>
+      </div>
+      <div class="planner vlm">
+        <h4>VLM-TAMP<a class="cite" href="#ref-7">[7]</a></h4>
+        <p class="sub">VLM subgoals, refined by a PDDL planner</p>
+        <p>A VLM proposes intermediate subgoals as grounded predicates; a symbolic planner with a hand-crafted PDDL<a class="cite" href="#ref-8">[8]</a> domain turns each into a skill sequence. Failures trigger symbolic replanning or subgoal revision.</p>
+      </div>
+      <div class="planner tru">
+        <h4>Tru-POMDP<a class="cite" href="#ref-9">[9]</a></h4>
+        <p class="sub">Belief-space search over LLM hypotheses</p>
+        <p>An LLM Tree of Hypotheses builds a weighted particle belief over goals and unobserved object locations; a DESPOT-style search picks actions, and the belief updates after each one.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section class="section" id="results">
+  <div class="container">
+    <h2>Results</h2>
+
+    <h3>ReAct leads, but every planner incurs extra actions</h3>
+    <div class="headline">
+      <div class="hl react"><span class="num">45.3%</span><span class="lbl">ReAct success</span><span class="sub">71.7% completion</span></div>
+      <div class="hl vlm"><span class="num">29.1%</span><span class="lbl">VLM-TAMP success</span><span class="sub">48.3% completion</span></div>
+      <div class="hl tru"><span class="num">32.7%</span><span class="lbl">Tru-POMDP success</span><span class="sub">56.2% completion</span></div>
+    </div>
+    <figure>
+      <img src="static/images/overall_metrics_v2.png" alt="Bar chart of task success, SPL_act, task completion, and TC-SPL_act for the three planners" loading="lazy">
+      <figcaption>Overall task success, SPL<sub>act</sub>, task completion, and TC-SPL<sub>act</sub>. Adding action efficiency lowers every planner's score (ReAct: 45.3% &rarr; 36.9% SPL<sub>act</sub>; 71.7% &rarr; 59.1% TC-SPL<sub>act</sub>).</figcaption>
+    </figure>
+
+    <h3>Better memory &ne; better plans</h3>
+    <div class="two-col align-center">
+      <div>
+        <table class="mem-table">
+          <caption>TC-SPL<sub>act</sub> under each initial-memory condition</caption>
+          <thead><tr><th>Method</th><th>Accurate</th><th>Incomplete</th><th>Outdated</th></tr></thead>
+          <tbody>
+            <tr class="vlm"><td>VLM-TAMP</td><td>0.34</td><td>0.39</td><td class="best">0.41</td></tr>
+            <tr class="react"><td>ReAct</td><td class="best">0.71</td><td>0.55</td><td>0.52</td></tr>
+            <tr class="tru"><td>Tru-POMDP</td><td>0.39</td><td>0.32</td><td class="best">0.47</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Only <span class="c-react">ReAct</span> benefits clearly from accurate memory.
+        <span class="c-vlm">VLM-TAMP</span> and <span class="c-tru">Tru-POMDP</span> score best with <em>outdated</em> memory.
+        One possible explanation is that memory&ndash;observation discrepancies trigger extra exploration or replanning that surfaces useful information,
+        though the aggregate results do not establish this.
+      </p>
+    </div>
+
+    <h3>Environment configurations vs. BASE</h3>
+    <figure>
+      <img src="static/images/memory_uncertainity_averages_v2.png" alt="Change in TC-SPL_act from BASE across SUB, ABS, HID, and DIS for each planner" loading="lazy">
+      <figcaption>&Delta;TC-SPL<sub>act</sub> from BASE in percentage points, averaged over memory conditions.
+        <strong>Absent</strong> and <strong>hidden</strong> targets hurt every planner, ReAct most (&minus;14.0 and &minus;18.8 pts).
+        <strong>Substitutes</strong> and <strong>distractors</strong> split them: VLM-TAMP gains (+9.9, +12.4 pts), while Tru-POMDP drops with substitutes (&minus;12.7 pts).</figcaption>
+    </figure>
+
+    <h3>Failure &amp; inefficiency analysis</h3>
+    <p>Rule-based analysis of execution traces, following prior embodied-agent error analyses<a class="cite" href="#ref-10">[10, 11]</a>. Categories overlap, so rates need not sum to 100%.</p>
+    <div class="two-col">
+      <figure>
+        <img src="static/images/failure_findings_v3.png" alt="Failure-finding rates across planners" loading="lazy">
+        <figcaption>Failure findings, as % of <em>unsuccessful</em> episodes. VLM-TAMP most often leaves objects unplaced (56.4%); ReAct makes the most placement errors (53.7%).</figcaption>
+      </figure>
+      <figure>
+        <img src="static/images/inefficiency_findings_v3.png" alt="Inefficiency-finding rates across planners" loading="lazy">
+        <figcaption>Inefficiency findings, as % of <em>all</em> episodes. ReAct has the most precondition errors (46.0%); Tru-POMDP the most unnecessary (52.4%) and repeated (41.1%) actions.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TAKEAWAYS ============ -->
+<section class="section alt" id="takeaways">
+  <div class="container">
+    <h2>Takeaways</h2>
+    <div class="planners">
+      <div class="planner react"><h4>ReAct</h4><p>Highest task performance, but vulnerable to incorrect placements, precondition violations, and unproductive exploration when objects are unavailable.</p></div>
+      <div class="planner vlm"><h4>VLM-TAMP</h4><p>Fewer precondition errors, but can terminate after completing its generated subgoals without satisfying the full task.</p></div>
+      <div class="planner tru"><h4>Tru-POMDP</h4><p>Explicitly represents uncertainty, but frequently takes unnecessary and repeated actions.</p></div>
+    </div>
+    <p class="callout">
+      Robust long-horizon planning requires more than reactive replanning, symbolic feasibility checking, or explicit uncertainty representation in isolation.
+      Effective systems must also decide <strong>when more information is needed</strong>, <strong>verify progress toward task-level goals</strong>,
+      and <strong>recognize when continued execution is unlikely to be productive</strong>.
+    </p>
+  </div>
+</section>
+
+<!-- ============ ROLLOUTS ============ -->
+<section class="section" id="rollouts">
+  <div class="container">
+    <h2>Example Rollouts</h2>
+    <!-- TODO: replace each placeholder with a <video> clip from Habitat -->
+    <div class="video-grid">
+      <div class="placeholder media-16x9"><span>ReAct &middot; T1 &middot; HID &times; Outdated</span></div>
+      <div class="placeholder media-16x9"><span>VLM-TAMP &middot; T1 &middot; HID &times; Outdated</span></div>
+      <div class="placeholder media-16x9"><span>Tru-POMDP &middot; T1 &middot; HID &times; Outdated</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BIBTEX ============ -->
+<section class="section alt" id="bibtex">
+  <div class="container narrow">
+    <h2>BibTeX</h2>
+    <!-- TODO: update key, booktitle, and year once proceedings/arXiv are final -->
+    <div class="bib">
+      <button class="copy-btn" type="button" data-copy="bibtex-code">Copy</button>
+<pre><code id="bibtex-code">@inproceedings{muriki2026evaluating,
+  title     = {Evaluating Long-Horizon Robot Planning under Uncertainty},
+  author    = {Muriki, Harsh and Aravindan, Gayathri and Zheng, Yuchen and Chernova, Sonia},
+  booktitle = {CoRL 2026 Workshop on LEAP},
+  year      = {2026}
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REFERENCES ============ -->
+<section class="section references" id="references">
+  <div class="container narrow">
+    <h2>References</h2>
+    <ol class="ref-list">
+      <li id="ref-1">M. Savva, A. Kadian, O. Maksymets, et al. Habitat: A Platform for Embodied AI Research. <em>ICCV</em>, 2019. <a href="https://arxiv.org/abs/1904.01201">arXiv</a></li>
+      <li id="ref-2">A. Szot, A. Clegg, E. Undersander, et al. Habitat 2.0: Training Home Assistants to Rearrange their Habitat. <em>NeurIPS</em>, 2021. <a href="https://arxiv.org/abs/2106.14405">arXiv</a></li>
+      <li id="ref-3">X. Puig, E. Undersander, A. Szot, et al. Habitat 3.0: A Co-Habitat for Humans, Avatars and Robots. <em>arXiv</em>, 2023. <a href="https://arxiv.org/abs/2310.13724">arXiv</a></li>
+      <li id="ref-4">M. Chang, G. Chhablani, A. Clegg, et al. PARTNR: A Benchmark for Planning and Reasoning in Embodied Multi-agent Tasks. <em>ICLR</em>, 2025. <a href="https://arxiv.org/abs/2411.00081">arXiv</a></li>
+      <li id="ref-5">P. Anderson, A. Chang, D. S. Chaplot, et al. On Evaluation of Embodied Navigation Agents. <em>arXiv:1807.06757</em>, 2018. <a href="https://arxiv.org/abs/1807.06757">arXiv</a></li>
+      <li id="ref-6">S. Yao, J. Zhao, D. Yu, et al. ReAct: Synergizing Reasoning and Acting in Language Models. <em>arXiv:2210.03629</em>, 2023. <a href="https://arxiv.org/abs/2210.03629">arXiv</a></li>
+      <li id="ref-7">Z. Yang, C. Garrett, D. Fox, T. Lozano-P&eacute;rez, L. P. Kaelbling. Guiding Long-Horizon Task and Motion Planning with Vision Language Models. <em>arXiv:2410.02193</em>, 2024. <a href="https://arxiv.org/abs/2410.02193">arXiv</a></li>
+      <!-- TODO: author list for PDDL is mangled in references.bib; verify before camera-ready -->
+      <li id="ref-8">M. Ghallab, A. Howe, C. Knoblock, D. McDermott, et al. PDDL&mdash;The Planning Domain Definition Language. Technical Report, 1998.</li>
+      <li id="ref-9">W. Tang, X. He, Y. Huang, Y. Xiao, C. Lu, P. Cai. Tru-POMDP: Task Planning Under Uncertainty via Tree of Hypotheses and Open-Ended POMDPs. <em>arXiv:2506.02860</em>, 2026. <a href="https://arxiv.org/abs/2506.02860">arXiv</a></li>
+      <li id="ref-10">M. Li, S. Zhao, Q. Wang, et al. Embodied Agent Interface: Benchmarking LLMs for Embodied Decision Making. <em>arXiv:2410.07166</em>, 2025. <a href="https://arxiv.org/abs/2410.07166">arXiv</a></li>
+      <li id="ref-11">R. Yang, H. Chen, J. Zhang, et al. EmbodiedBench: Comprehensive Benchmarking Multi-modal Large Language Models for Vision-Driven Embodied Agents. <em>arXiv:2502.09560</em>, 2025. <a href="https://arxiv.org/abs/2502.09560">arXiv</a></li>
+    </ol>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container narrow center">
+    <!-- TODO: add acknowledgements / funding if any -->
+    <p>Georgia Institute of Technology &middot; Contact: <a href="mailto:vmuriki3@gatech.edu">vmuriki3@gatech.edu</a></p>
+  </div>
+</footer>
+
+<script src="main.js?v=3"></script>
+</body>
+</html>
