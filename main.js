@@ -104,7 +104,15 @@ if (carousel) {
   function goTo(i) {
     i = (i + slides.length) % slides.length;
     const slide = slides[i];
-    track.scrollTo({ left: slide.offsetLeft - (track.clientWidth - slide.offsetWidth) / 2 });
+    // Browsers can drop a smooth scroll on an off-screen element, so jump instantly then
+    const behavior = inView && document.visibilityState === 'visible' ? 'smooth' : 'instant';
+    const left = slide.offsetLeft - (track.clientWidth - slide.offsetWidth) / 2;
+    const from = track.scrollLeft;
+    track.scrollTo({ left, behavior });
+    // ...and if a smooth scroll never started at all, land there directly
+    if (behavior === 'smooth') setTimeout(() => {
+      if (track.scrollLeft === from && Math.abs(from - left) > 2) track.scrollTo({ left, behavior: 'instant' });
+    }, 400);
     setActive(i);
   }
 

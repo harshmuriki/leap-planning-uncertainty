@@ -169,7 +169,8 @@ h4 { margin: 0 0 6px; font-size: 17px; }
 }
 .carousel { margin-top: 24px; }
 .carousel-track {
-  display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+  position: relative; /* slide offsetLeft is measured from the track */
+  display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
   padding: 4px 9% 8px; margin: 0 -4px; scrollbar-width: none; overscroll-behavior-x: contain;
 }
 .carousel-track::-webkit-scrollbar { display: none; }
