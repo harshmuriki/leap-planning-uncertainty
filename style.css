@@ -50,29 +50,36 @@ img { max-width: 100%; display: block; }
 .nav-links a { color: var(--muted); }
 .nav-links a:hover, .nav-links a.active { color: var(--text); text-decoration: none; }
 
-/* ---------- side nav (screens 1000px and up) ---------- */
-.sidenav { display: none; }
-@media (min-width: 1000px) {
+/* ---------- icon nav (right edge, 860px and up) ---------- */
+.dotnav { display: none; }
+@media (min-width: 860px) {
   .topnav { display: none; }
-  body { padding-left: 210px; }
-  .sidenav {
-    display: flex; flex-direction: column;
-    position: fixed; top: 0; left: 0; bottom: 0; width: 210px; z-index: 10;
-    padding: 28px 20px; background: var(--bg); border-right: 1px solid var(--border);
-    overflow-y: auto;
-  }
-  .side-brand { font-weight: 600; font-size: 14px; line-height: 1.35; color: var(--text); }
-  .side-brand:hover { text-decoration: none; color: var(--accent); }
-  .side-venue { font-size: 11.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin: 6px 0 24px; }
-  .side-links { display: flex; flex-direction: column; gap: 2px; margin-left: -20px; }
-  .side-links a {
-    font-size: 14px; color: var(--muted); padding: 5px 20px 5px 17px;
-    border-left: 3px solid transparent;
-  }
-  .side-links a:hover { color: var(--text); text-decoration: none; background: var(--bg-alt); }
-  .side-links a.active { color: var(--text); font-weight: 600; border-left-color: var(--accent); }
-  .side-quick { margin-top: auto; display: flex; gap: 14px; font-size: 13px; padding-top: 20px; }
   html { scroll-padding-top: 16px; }
+  .dotnav {
+    display: flex; flex-direction: column; gap: 2px;
+    position: fixed; right: 10px; top: 50%; transform: translateY(-50%); z-index: 10;
+  }
+  .dotnav a {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; color: var(--muted); transition: all .2s;
+  }
+  .dotnav a:hover { text-decoration: none; color: var(--accent); background: var(--bg-alt); }
+  .dotnav a.active { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .nav-icon { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .dot-label {
+    font-size: 12.5px; font-weight: 500; color: var(--text); white-space: nowrap;
+    background: var(--bg); padding: 2px 8px; border-radius: 4px; box-shadow: var(--shadow);
+    position: absolute; right: 40px; top: 50%; transform: translate(6px, -50%);
+    opacity: 0; transition: all .2s; pointer-events: none;
+  }
+  .dotnav a:hover .dot-label { opacity: 1; transform: translate(0, -50%); }
+  /* keep content clear of the icons */
+  .container { padding-left: 60px; padding-right: 60px; }
+}
+/* wide screens have room in the margin to keep the current section's name visible */
+@media (min-width: 1240px) {
+  .dotnav a.active .dot-label { opacity: 1; transform: translate(0, -50%); }
+  .dotnav:hover a.active:not(:hover) .dot-label { opacity: 0; }
 }
 
 /* ---------- hero ---------- */

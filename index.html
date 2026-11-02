@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 
@@ -31,25 +31,17 @@
   </div>
 </nav>
 
-<aside class="sidenav" aria-label="Sections">
-  <a href="#top" class="side-brand">Long-Horizon Planning under Uncertainty</a>
-  <span class="side-venue">CoRL 2026 &middot; LEAP</span>
-  <nav class="side-links">
-    <a href="#top">Overview</a>
-    <a href="#abstract">Abstract</a>
-    <a href="#benchmark">Benchmark</a>
-    <a href="#planners">Planners</a>
-    <a href="#results">Results</a>
-    <a href="#takeaways">Takeaways</a>
-    <a href="#rollouts">Rollouts</a>
-    <a href="#bibtex">BibTeX</a>
-    <a href="#references">References</a>
-  </nav>
-  <div class="side-quick">
-    <a href="static/paper.pdf" target="_blank" rel="noopener">Paper</a>
-    <a href="https://arxiv.org/abs/2610.17326" target="_blank" rel="noopener">arXiv</a>
-  </div>
-</aside>
+<nav class="dotnav" aria-label="Sections">
+  <a href="#top" aria-label="Overview"><span class="dot-label">Overview</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></a>
+  <a href="#abstract" aria-label="Abstract"><span class="dot-label">Abstract</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></a>
+  <a href="#benchmark" aria-label="Benchmark"><span class="dot-label">Benchmark</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></a>
+  <a href="#planners" aria-label="Planners"><span class="dot-label">Planners</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg></a>
+  <a href="#results" aria-label="Results"><span class="dot-label">Results</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></a>
+  <a href="#takeaways" aria-label="Takeaways"><span class="dot-label">Takeaways</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg></a>
+  <a href="#rollouts" aria-label="Rollouts"><span class="dot-label">Rollouts</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4z"/></svg></a>
+  <a href="#bibtex" aria-label="BibTeX"><span class="dot-label">BibTeX</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h5v5c0 3-2 5-5 6M15 8h5v5c0 3-2 5-5 6"/></svg></a>
+  <a href="#references" aria-label="References"><span class="dot-label">References</span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></a>
+</nav>
 
 <!-- ============ HERO ============ -->
 <header class="hero" id="top">
@@ -398,6 +390,6 @@
   </div>
 </footer>
 
-<script src="main.js?v=4"></script>
+<script src="main.js?v=5"></script>
 </body>
 </html>

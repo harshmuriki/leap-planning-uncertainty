@@ -44,7 +44,7 @@ document.querySelectorAll('.task[data-video]').forEach((card) => {
 });
 
 // Highlight the nav link for the section currently in view
-const links = [...document.querySelectorAll('.nav-links a, .side-links a')];
+const links = [...document.querySelectorAll('.nav-links a, .dotnav a')];
 const sections = [...new Set(links.map((a) => a.getAttribute('href')))].map((h) => document.querySelector(h));
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
