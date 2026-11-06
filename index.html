@@ -9,7 +9,7 @@
   <meta property="og:url" content="https://harshmuriki.github.io/leap-planning-uncertainty/">
   <meta property="og:title" content="Evaluating Long-Horizon Robot Planning under Uncertainty">
   <meta property="og:description" content="CoRL 2026 Workshop on Learning Effective Abstractions for Planning (LEAP). Benchmarking ReAct, VLM-TAMP, and Tru-POMDP under memory and environment uncertainty.">
-  <meta property="og:image" content="https://harshmuriki.github.io/leap-planning-uncertainty/static/images/overall_metrics_v2.png">
+  <meta property="og:image" content="https://harshmuriki.github.io/leap-planning-uncertainty/static/images/overall_metrics.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -304,8 +304,15 @@
       <div class="hl tru"><span class="num">32.7%</span><span class="lbl">Tru-POMDP success</span><span class="sub">56.2% completion</span></div>
     </div>
     <figure>
-      <img src="static/images/overall_metrics_v2.png" alt="Bar chart of task success, SPL_act, task completion, and TC-SPL_act for the three planners" loading="lazy">
+      <img src="static/images/overall_metrics.png" alt="Bar chart of task success, SPL_act, task completion, and TC-SPL_act for the three planners" loading="lazy">
       <figcaption>Overall task success, SPL<sub>act</sub>, task completion, and TC-SPL<sub>act</sub>. Adding action efficiency lowers every planner's score (ReAct: 45.3% &rarr; 36.9% SPL<sub>act</sub>; 71.7% &rarr; 59.1% TC-SPL<sub>act</sub>).</figcaption>
+    </figure>
+
+    <h3>Difficulty varies sharply by task</h3>
+    <figure>
+      <a href="static/images/spl_by_task.png"><img src="static/images/spl_by_task.png" alt="Bar chart of SPL_act per task T1 to T7 for the three planners" loading="lazy"></a>
+      <figcaption>SPL<sub>act</sub> per task, averaged over variants and repetitions. T1 is nearly solved by ReAct and VLM-TAMP (0.73, 0.70), while T5 and T6 are almost never completed efficiently and Tru-POMDP never succeeds on T4.
+        ReAct leads on five of seven tasks; Tru-POMDP leads on T2 and T5.</figcaption>
     </figure>
 
     <h3>Better memory &ne; better plans</h3>
@@ -328,6 +335,11 @@
         though the aggregate results do not establish this.
       </p>
     </div>
+
+    <figure>
+      <a href="static/images/tc_spl_scenario_memory.png"><img src="static/images/tc_spl_scenario_memory.png" alt="TC-SPL_act by environment scenario and initial memory, one panel per planner" loading="lazy"></a>
+      <figcaption>TC-SPL<sub>act</sub> across environment scenarios and initial-memory conditions for each planner. Target exists, on surface, and no distractors together form the shared BASE configuration. Click to enlarge.</figcaption>
+    </figure>
 
     <h3>Environment configurations vs. BASE</h3>
     <figure>
