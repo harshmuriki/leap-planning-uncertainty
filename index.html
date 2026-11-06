@@ -338,27 +338,27 @@
     </figure>
 
     <h3>Failure &amp; inefficiency analysis</h3>
-    <p>Rule-based analysis of execution traces, following prior embodied-agent error analyses<a class="cite" href="#ref-10">[10, 11]</a>. Categories overlap, so rates need not sum to 100%. Darker cells are more frequent; bold marks the highest in each row. Hover a finding for its definition.</p>
+    <p>Rule-based analysis of execution traces, following prior embodied-agent error analyses<a class="cite" href="#ref-10">[10, 11]</a>. Both tables report the share of all 450 runs per planner. Findings overlap, so a failure column does not sum to that planner's failure rate. Darker cells are more frequent; bold marks the highest in each row. Hover a finding for its definition.</p>
     <div class="finding-grid">
     <figure class="finding-fig">
       <div class="finding-scroll">
       <table class="finding-table">
-        <caption>Failures <span>&middot; % of unsuccessful runs</span></caption>
-        <thead><tr><th>Finding</th><th class="react">ReAct<small>n=246</small></th><th class="vlm">VLM-TAMP<small>n=306</small></th><th class="tru">Tru-POMDP<small>n=303</small></th></tr></thead>
+        <caption>Failures <span>&middot; % of all runs</span></caption>
+        <thead><tr><th>Finding</th><th class="react">ReAct<small>n=450</small><small>246 failed</small></th><th class="vlm">VLM-TAMP<small>n=450</small><small>306 failed</small></th><th class="tru">Tru-POMDP<small>n=450</small><small>303 failed</small></th></tr></thead>
         <tbody>
-          <tr><th scope="row" title="Found, but never put where the task needs it">Object not placed</th><td style="--h:39%">23.6</td><td class="max" style="--h:86%">51.3</td><td style="--h:75%">45.2</td></tr>
-          <tr><th scope="row" title="A required action (e.g. heat, switch off) was skipped">Missing action</th><td style="--h:62%">37.4</td><td class="max" style="--h:80%">48.0</td><td style="--h:60%">36.3</td></tr>
-          <tr><th scope="row" title="Object placed in the wrong location">Placement error</th><td class="max" style="--h:90%">53.7</td><td style="--h:66%">39.5</td><td style="--h:28%">16.5</td></tr>
-          <tr><th scope="row" title="A needed object was never found">Object not found</th><td style="--h:33%">19.9</td><td class="max" style="--h:55%">33.0</td><td style="--h:31%">18.5</td></tr>
-          <tr><th scope="row" title="Stuck, or kept executing without progress">Insufficient planning</th><td style="--h:3%">1.6</td><td style="--h:24%">14.7</td><td class="max" style="--h:29%">17.5</td></tr>
-          <tr><th scope="row" title="Tree of Hypotheses returned no usable goals (Tru-POMDP only)">No hypotheses</th><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td><td class="max" style="--h:44%">26.4</td></tr>
-          <tr><th scope="row" title="Used a distractor instead of the task object">Wrong object</th><td style="--h:3%">1.6</td><td style="--h:6%">3.6</td><td class="max" style="--h:9%">5.3</td></tr>
-          <tr><th scope="row" title="A step was done after the step it had to precede">Wrong order</th><td class="max" style="--h:9%">5.3</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
-          <tr><th scope="row" title="Kept planning or searching after evidence said to abandon">Failure to stop</th><td class="max" style="--h:6%">3.7</td><td style="--h:0%">0.0</td><td style="--h:1%">0.7</td></tr>
+          <tr><th scope="row" title="Found, but never put where the task needs it">Object not placed</th><td style="--h:22%">12.9</td><td class="max" style="--h:58%">34.9</td><td style="--h:51%">30.4</td></tr>
+          <tr><th scope="row" title="A required action (e.g. heat, switch off) was skipped">Missing action</th><td style="--h:34%">20.4</td><td class="max" style="--h:55%">32.7</td><td style="--h:41%">24.4</td></tr>
+          <tr><th scope="row" title="Object placed in the wrong location">Placement error</th><td class="max" style="--h:49%">29.3</td><td style="--h:45%">26.9</td><td style="--h:18%">11.1</td></tr>
+          <tr><th scope="row" title="A needed object was never found">Object not found</th><td style="--h:18%">10.9</td><td class="max" style="--h:37%">22.4</td><td style="--h:21%">12.4</td></tr>
+          <tr><th scope="row" title="Stuck, or kept executing without progress">Insufficient planning</th><td style="--h:2%">0.9</td><td style="--h:17%">10.0</td><td class="max" style="--h:20%">11.8</td></tr>
+          <tr><th scope="row" title="Tree of Hypotheses returned no usable goals (Tru-POMDP only)">No hypotheses</th><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td><td class="max" style="--h:30%">17.8</td></tr>
+          <tr><th scope="row" title="Used a distractor instead of the task object">Wrong object</th><td style="--h:2%">0.9</td><td style="--h:4%">2.4</td><td class="max" style="--h:6%">3.6</td></tr>
+          <tr><th scope="row" title="A step was done after the step it had to precede">Wrong order</th><td class="max" style="--h:5%">2.9</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
+          <tr><th scope="row" title="Kept planning or searching after evidence said to abandon">Failure to stop</th><td class="max" style="--h:3%">2.0</td><td style="--h:0%">0.0</td><td style="--h:1%">0.4</td></tr>
         </tbody>
       </table>
       </div>
-      <figcaption>VLM-TAMP most often leaves objects unplaced (51.3%); ReAct makes the most placement errors (53.7%).</figcaption>
+      <figcaption>Runs that failed with each finding. VLM-TAMP most often leaves objects unplaced (34.9%); ReAct makes the most placement errors (29.3%).</figcaption>
     </figure>
     <figure class="finding-fig">
       <div class="finding-scroll">
