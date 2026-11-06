@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=24">
+  <link rel="stylesheet" href="style.css?v=25">
 </head>
 <body>
 
@@ -53,7 +53,7 @@
       <a href="https://felixzheng02.github.io/" target="_blank" rel="noopener">Yuchen Zheng</a>,&nbsp;
       <a href="https://faculty.cc.gatech.edu/~chernova/" target="_blank" rel="noopener">Sonia Chernova</a>
     </p>
-    <p class="affil"><a href="https://www.gt-rail.com/" target="_blank" rel="noopener">RAIL Lab</a>, Georgia Institute of Technology &nbsp;&middot;&nbsp; <sup>*</sup>Corresponding author</p>
+    <p class="affil"><a href="https://www.gt-rail.com/" target="_blank" rel="noopener">RAIL Lab</a>, Georgia Institute of Technology &nbsp;&middot;&nbsp; <sup>*</sup><a href="mailto:vmuriki3@gatech.edu">vmuriki3@gatech.edu</a></p>
 
     <div class="links">
       <a class="btn" href="static/paper.pdf" target="_blank" rel="noopener">
@@ -90,8 +90,9 @@
       <p class="video-note">Guest table preparation with stale memory of the soap, a glass and the plate. All three planners succeed &mdash; <span class="compare-stat"></span> (reference: 24).</p>
     </div>
     <p class="teaser-caption">
-      An object remembered on a countertop may have been moved into a cabinet, replaced, or removed entirely.
-      <strong>How do different planners respond when the robot's initial memory and the environment are varied systematically, within one shared execution framework?</strong>
+      A robot&rsquo;s memory of a home can become outdated. Objects can be moved, replaced, or fully removed.
+      Different scenarios require the robot to take different actions: search, substitute, replan, or report the goal as infeasible.
+      <strong>How do initial robot memory and changes in the environment affect long-horizon planning performance?</strong>
     </p>
   </div>
 </section>
@@ -229,9 +230,9 @@
     </div>
     <div class="grid-legend">
       <span>Cells show what the robot <em>believes</em> at the start.</span>
-      <span class="lg m-acc"><i></i>Accurate: matches the world</span>
-      <span class="lg m-inc"><i></i>Incomplete: information missing</span>
-      <span class="lg m-out"><i></i>Outdated: stale and wrong</span>
+      <span class="lg m-acc"><i></i>Accurate: correct information</span>
+      <span class="lg m-inc"><i></i>Incomplete: some information omitted</span>
+      <span class="lg m-out"><i></i>Outdated: stale, no longer true</span>
     </div>
     <p class="grid-note">Outlined: the HID &times; Outdated example, where the jug is in the fridge but the robot remembers it on the dining table. In ABS, criteria needing the unavailable object are excluded.</p>
 
@@ -247,7 +248,7 @@
       </div>
       <div class="metric">
         <h4>TC-SPL<sub>act</sub></h4>
-        <p>Replaces binary success with completion <code>C<sub>i</sub></code>, rewarding partial progress while penalizing extra skill attempts. 1 = as efficient as a human.</p>
+        <p>Measures subtask completion and action efficiency relative to a human reference plan. Replaces binary success with completion <code>C<sub>i</sub></code>, rewarding partial progress while penalizing extra skill attempts. 1 = as efficient as a human.</p>
       </div>
     </div>
   </div>
@@ -267,7 +268,7 @@
       <div class="planner-row react">
         <div class="planner-text">
           <h4>ReAct<a class="cite" href="#ref-6">[6]</a></h4>
-          <p class="sub">A VLM picks every next skill</p>
+          <p class="sub">Interleaves VLM reasoning and skill selection using visual observations, memory, and execution feedback.</p>
           <p>Extends PARTNR-Planner&rsquo;s<a class="cite" href="#ref-4">[4]</a> zero-shot ReAct with visual observations. At each step a VLM reasons over the instruction, world graph, images, and action history, then selects the next skill; execution feedback informs the next decision.</p>
         </div>
         <img class="planner-diagram" src="static/images/diagram_react.png" alt="ReAct loop: the VLM sends the next action to the robot in Habitat; observations and execution failures feed back to the VLM" loading="lazy">
@@ -275,7 +276,7 @@
       <div class="planner-row vlm">
         <div class="planner-text">
           <h4>VLM-TAMP<a class="cite" href="#ref-7">[7]</a></h4>
-          <p class="sub">VLM subgoals, refined by a PDDL planner</p>
+          <p class="sub">Combines VLM-generated subgoals with symbolic planning to produce executable skill sequences.</p>
           <p>A VLM proposes intermediate subgoals as grounded predicates; a symbolic planner with a hand-crafted PDDL<a class="cite" href="#ref-8">[8]</a> domain turns each into a skill sequence. Failures trigger symbolic replanning or subgoal revision.</p>
         </div>
         <img class="planner-diagram" src="static/images/diagram_vlmtamp.png" alt="VLM-TAMP pipeline: VLM to subgoal iterator to PDDL planner to robot; execution failures return to the PDDL planner, failure context to the VLM, and subgoal completion to the iterator" loading="lazy">
@@ -283,7 +284,7 @@
       <div class="planner-row tru">
         <div class="planner-text">
           <h4>Tru-POMDP<a class="cite" href="#ref-9">[9]</a></h4>
-          <p class="sub">Belief-space search over LLM hypotheses</p>
+          <p class="sub">Maintains hypotheses over goals and object locations, updating beliefs through belief-space planning.</p>
           <p>An LLM Tree of Hypotheses builds a weighted particle belief over goals and unobserved object locations; a DESPOT-style search picks actions, and the belief updates after each one.</p>
         </div>
         <img class="planner-diagram" src="static/images/diagram_trupomdp.png" alt="Tru-POMDP loop: LLM Tree of Hypotheses to particle belief to belief-space planner to robot; observations and actions drive a belief update, which can regenerate hypotheses" loading="lazy">
@@ -363,13 +364,13 @@
     <h3>Environment configurations vs. BASE</h3>
     <figure>
       <img src="static/images/memory_uncertainity_averages_v2.png" alt="Change in TC-SPL_act from BASE across SUB, ABS, HID, and DIS for each planner" loading="lazy">
-      <figcaption>&Delta;TC-SPL<sub>act</sub> from BASE in percentage points, averaged over memory conditions.
+      <figcaption>On average, most environment changes lower performance. &Delta;TC-SPL<sub>act</sub> from BASE in percentage points, averaged over memory conditions.
         <strong>Absent</strong> and <strong>hidden</strong> targets hurt every planner, ReAct most (&minus;14.0 and &minus;18.8 pts).
         <strong>Substitutes</strong> and <strong>distractors</strong> split them: VLM-TAMP gains (+9.9, +13.1 pts), while Tru-POMDP drops with substitutes (&minus;12.7 pts).</figcaption>
     </figure>
 
     <h3>Failure &amp; inefficiency analysis</h3>
-    <p>Rule-based analysis of execution traces, following prior embodied-agent error analyses<a class="cite" href="#ref-10">[10, 11]</a>. Both tables report the share of all 450 runs per planner. Findings overlap, so a failure column does not sum to that planner's failure rate. Darker cells are more frequent; bold marks the highest in each row. Hover a finding for its definition.</p>
+    <p>Rule-based labels on execution traces, following prior embodied-agent error analyses<a class="cite" href="#ref-10">[10, 11]</a>. <strong>Failures</strong> explain why unsuccessful runs failed; <strong>inefficiencies</strong> capture wasted actions in any run. Both tables report the share of all 450 runs per planner. Findings overlap, so a failure column does not sum to that planner's failure rate. Darker cells are more frequent; bold marks the highest in each row. Hover a finding for its definition.</p>
     <div class="finding-grid">
     <figure class="finding-fig">
       <div class="finding-scroll">
@@ -415,16 +416,16 @@
 <section class="section alt" id="takeaways">
   <div class="container">
     <h2>Takeaways</h2>
+    <ul class="takeaway-list">
+      <li><strong>ReAct does best</strong>, outperforming symbolic and belief-space planners in task success and completion.</li>
+      <li><strong>Accurate memory does not always improve performance</strong>; how planners use and revise knowledge matters.</li>
+      <li>Reliable, efficient planning requires knowing <strong>when to search</strong>, <strong>verify task completion</strong>, and <strong>stop</strong>.</li>
+    </ul>
     <div class="planners">
       <div class="planner react"><h4>ReAct</h4><p>Highest task performance, but vulnerable to incorrect placements, precondition violations, and unproductive exploration when objects are unavailable.</p></div>
       <div class="planner vlm"><h4>VLM-TAMP</h4><p>Fewer precondition errors, but can terminate after completing its generated subgoals without satisfying the full task.</p></div>
       <div class="planner tru"><h4>Tru-POMDP</h4><p>Explicitly represents uncertainty, but frequently takes unnecessary and repeated actions.</p></div>
     </div>
-    <p class="callout">
-      Robust long-horizon planning requires more than reactive replanning, symbolic feasibility checking, or explicit uncertainty representation in isolation.
-      Effective systems must also decide <strong>when more information is needed</strong>, <strong>verify progress toward task-level goals</strong>,
-      and <strong>recognize when continued execution is unlikely to be productive</strong>.
-    </p>
   </div>
 </section>
 
@@ -457,11 +458,11 @@
       <li id="ref-3">X. Puig, E. Undersander, A. Szot, et al. Habitat 3.0: A Co-Habitat for Humans, Avatars and Robots. <em>arXiv</em>, 2023. <a href="https://arxiv.org/abs/2310.13724">arXiv</a></li>
       <li id="ref-4">M. Chang, G. Chhablani, A. Clegg, et al. PARTNR: A Benchmark for Planning and Reasoning in Embodied Multi-agent Tasks. <em>ICLR</em>, 2025. <a href="https://arxiv.org/abs/2411.00081">arXiv</a></li>
       <li id="ref-5">P. Anderson, A. Chang, D. S. Chaplot, et al. On Evaluation of Embodied Navigation Agents. <em>arXiv:1807.06757</em>, 2018. <a href="https://arxiv.org/abs/1807.06757">arXiv</a></li>
-      <li id="ref-6">S. Yao, J. Zhao, D. Yu, et al. ReAct: Synergizing Reasoning and Acting in Language Models. <em>arXiv:2210.03629</em>, 2023. <a href="https://arxiv.org/abs/2210.03629">arXiv</a></li>
-      <li id="ref-7">Z. Yang, C. Garrett, D. Fox, T. Lozano-P&eacute;rez, L. P. Kaelbling. Guiding Long-Horizon Task and Motion Planning with Vision Language Models. <em>arXiv:2410.02193</em>, 2024. <a href="https://arxiv.org/abs/2410.02193">arXiv</a></li>
+      <li id="ref-6">S. Yao, J. Zhao, D. Yu, et al. ReAct: Synergizing Reasoning and Acting in Language Models. <em>ICLR</em>, 2023. <a href="https://arxiv.org/abs/2210.03629">arXiv</a></li>
+      <li id="ref-7">Z. Yang, C. Garrett, D. Fox, T. Lozano-P&eacute;rez, L. P. Kaelbling. Guiding Long-Horizon Task and Motion Planning with Vision Language Models. <em>ICRA</em>, 2025. <a href="https://arxiv.org/abs/2410.02193">arXiv</a></li>
       <!-- TODO: author list for PDDL is mangled in references.bib; verify before camera-ready -->
       <li id="ref-8">M. Ghallab, A. Howe, C. Knoblock, D. McDermott, et al. PDDL&mdash;The Planning Domain Definition Language. Technical Report, 1998.</li>
-      <li id="ref-9">W. Tang, X. He, Y. Huang, Y. Xiao, C. Lu, P. Cai. Tru-POMDP: Task Planning Under Uncertainty via Tree of Hypotheses and Open-Ended POMDPs. <em>arXiv:2506.02860</em>, 2026. <a href="https://arxiv.org/abs/2506.02860">arXiv</a></li>
+      <li id="ref-9">W. Tang, X. He, Y. Huang, Y. Xiao, C. Lu, P. Cai. Tru-POMDP: Task Planning Under Uncertainty via Tree of Hypotheses and Open-Ended POMDPs. <em>NeurIPS</em>, 2025. <a href="https://arxiv.org/abs/2506.02860">arXiv</a></li>
       <li id="ref-10">M. Li, S. Zhao, Q. Wang, et al. Embodied Agent Interface: Benchmarking LLMs for Embodied Decision Making. <em>arXiv:2410.07166</em>, 2025. <a href="https://arxiv.org/abs/2410.07166">arXiv</a></li>
       <li id="ref-11">R. Yang, H. Chen, J. Zhang, et al. EmbodiedBench: Comprehensive Benchmarking Multi-modal Large Language Models for Vision-Driven Embodied Agents. <em>arXiv:2502.09560</em>, 2025. <a href="https://arxiv.org/abs/2502.09560">arXiv</a></li>
     </ol>

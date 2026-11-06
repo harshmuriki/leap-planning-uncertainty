@@ -357,6 +357,11 @@ figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
 .finding-table td.max { font-weight: 700; }
 .finding-fig figcaption { font-size: 13.5px; }
 
+.takeaway-list {
+  margin: 20px 0 0; padding: 18px 22px 18px 40px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); font-size: 17px;
+}
+.takeaway-list li + li { margin-top: 8px; }
 .callout {
   margin-top: 28px; padding: 18px 22px; border-radius: var(--radius);
   background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
