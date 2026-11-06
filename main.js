@@ -151,6 +151,70 @@ if (carousel) {
   setActive(0);
 }
 
+// Metrics explorer: pick a metric and a breakdown; the table re-renders from window.METRICS.
+// Per-environment values exist only for TC-SPL_act, so that view locks the metric.
+const explorer = document.getElementById('explorer');
+if (explorer && window.METRICS) {
+  const D = window.METRICS;
+  const state = { metric: 'tcspl', by: 'memory', mem: 'ALL' };
+  const planners = ['react', 'vlm', 'tru'];
+  const metricNames = { success: 'task success', spl: 'SPL<sub>act</sub>', completion: 'task completion', tcspl: 'TC-SPL<sub>act</sub>' };
+  const memNames = { ACC: 'Accurate', INC: 'Incomplete', OUT: 'Outdated' };
+  const taskNames = ['Water fetching', 'Package preparation', 'Book collection', 'Grocery organization',
+    'Guest table preparation', 'Meal delivery', 'Household cleanup'];
+  const envNames = { BASE: 'Target on a surface', SUB: 'Only a substitute', ABS: 'No suitable object',
+    HID: 'Inside closed receptacle', DIS: 'Distractors present' };
+  const tbody = explorer.querySelector('tbody');
+  const groupHead = explorer.querySelector('.ex-group');
+  const note = explorer.querySelector('.ex-note');
+  const memSeg = explorer.querySelector('[data-key="mem"]');
+
+  const rows = () => {
+    if (state.by === 'memory') return [
+      { label: 'All runs', sub: `n=${D.overall.all.n}`, vals: D.overall.all, ref: true },
+      ...['ACC', 'INC', 'OUT'].map((k) => ({ label: memNames[k], sub: `n=${D.memory[k].n}`, vals: D.memory[k] })),
+    ];
+    if (state.by === 'task') return [
+      { label: 'All tasks', sub: `n=${D.overall.all.n}`, vals: D.overall.all, ref: true },
+      ...taskNames.map((name, i) => ({ label: `T${i + 1} ${name}`, sub: `n=${D.task[i + 1].n}`, vals: D.task[i + 1] })),
+    ];
+    return ['BASE', 'SUB', 'ABS', 'HID', 'DIS'].map((k) => {
+      const cell = D.env[k][state.mem];
+      return { label: `${k} &middot; ${envNames[k]}`, sub: `n=${D.env[k].n} per planner${state.mem === 'ALL' ? ' per memory' : ''}`,
+        vals: Object.fromEntries(planners.map((p) => [p, { tcspl: cell[p] }])), ref: k === 'BASE' };
+    });
+  };
+
+  const render = () => {
+    explorer.querySelectorAll('.seg').forEach((seg) => seg.querySelectorAll('button').forEach((b) => {
+      b.classList.toggle('on', b.dataset.val === state[seg.dataset.key]);
+      b.setAttribute('aria-pressed', b.dataset.val === state[seg.dataset.key]);
+      if (seg.dataset.key === 'metric') b.disabled = state.by === 'env' && b.dataset.val !== 'tcspl';
+    }));
+    memSeg.hidden = state.by !== 'env';
+    groupHead.textContent = { memory: 'Initial memory', task: 'Task', env: 'Environment' }[state.by];
+    tbody.innerHTML = rows().map((r) => {
+      const v = planners.map((p) => r.vals[p][state.metric]);
+      const max = Math.max(...v);
+      return `<tr class="${r.ref ? 'ref' : ''}"><th scope="row">${r.label}<small>${r.sub}</small></th>` +
+        planners.map((p, i) => `<td class="${p}${v[i] === max && max > 0 ? ' max' : ''}" title="${v[i].toFixed(1)}%">` +
+          `<div class="ex-bar"><i style="--w:${v[i]}%"></i><span>${v[i].toFixed(1)}</span></div></td>`).join('') + '</tr>';
+    }).join('');
+    note.innerHTML = state.by === 'env'
+      ? `TC-SPL<sub>act</sub> (%) per environment configuration${state.mem === 'ALL' ? ', averaged equally over the three memory conditions' : ` with ${memNames[state.mem].toLowerCase()} memory`}. BASE covers all seven tasks; the others only the tasks where they apply, so use the &Delta; chart below for matched comparisons.`
+      : `${metricNames[state.metric][0].toUpperCase() + metricNames[state.metric].slice(1)} (%) by ${state.by === 'memory' ? 'initial-memory condition' : 'task'}. Bold marks the best planner in each row.`;
+  };
+
+  explorer.querySelectorAll('.seg').forEach((seg) => seg.addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b || b.disabled) return;
+    state[seg.dataset.key] = b.dataset.val;
+    if (state.by === 'env') state.metric = 'tcspl';
+    render();
+  }));
+  render();
+}
+
 // Highlight the nav link for the section currently in view
 const links = [...document.querySelectorAll('.nav-links a, .dotnav a')];
 const sections = [...new Set(links.map((a) => a.getAttribute('href')))].map((h) => document.querySelector(h));

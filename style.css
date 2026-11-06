@@ -362,6 +362,41 @@ figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
   background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
 }
 
+/* ---------- metrics explorer ---------- */
+.explorer {
+  margin-top: 16px; padding: 18px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.ex-controls { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-bottom: 14px; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.seg[hidden] { display: none; }
+.seg button {
+  font: inherit; font-size: 13.5px; padding: 6px 12px; border: 0; border-right: 1px solid var(--border);
+  background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.seg button:last-child { border-right: 0; }
+.seg button:hover:not(:disabled) { color: var(--accent); background: var(--bg-alt); }
+.seg button.on { background: var(--accent); color: #fff; }
+.seg button:disabled { opacity: .4; cursor: not-allowed; }
+.ex-table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+.ex-table th, .ex-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+.ex-table thead th { font-size: 13px; color: var(--c, var(--muted)); font-weight: 600; }
+.ex-table tbody th { font-weight: 500; white-space: nowrap; text-transform: none; letter-spacing: normal; font-size: 14px; color: var(--text); }
+.ex-table tbody th small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 400; }
+.ex-table tr.ref th, .ex-table tr.ref td { background: var(--bg-alt); }
+.ex-table td { width: 26%; }
+.ex-bar { display: flex; align-items: center; gap: 8px; }
+.ex-bar i {
+  flex: 1; height: 8px; border-radius: 4px; background: var(--bg-alt); position: relative; overflow: hidden;
+}
+.ex-bar i::after {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); background: var(--c); border-radius: 4px;
+  transition: width .35s ease;
+}
+.ex-bar span { min-width: 38px; text-align: right; }
+.ex-table td.max span { font-weight: 700; }
+.ex-note { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
+
 /* ---------- bibtex ---------- */
 .bib { position: relative; }
 .bib pre {
@@ -406,6 +441,13 @@ figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
   .base-label { font-size: 9px; }
   .mem-table th, .mem-table td { padding: 8px 6px; }
   .finding-grid { grid-template-columns: 1fr; }
+  .explorer { padding: 12px; }
+  .ex-table th, .ex-table td { padding: 6px 5px; }
+  .ex-bar i { display: none; }
+  .ex-table { font-size: 13px; }
+  .ex-table tbody th { white-space: normal; font-size: 13px; }
+  .ex-table thead th { font-size: 11.5px; }
+  .seg button { padding: 5px 9px; font-size: 12.5px; }
   .carousel-track { padding-inline: 6%; gap: 10px; }
   .slide { flex-basis: 88%; grid-template-columns: 1fr; gap: 12px; }
   .slide-text h4 { font-size: 17px; }

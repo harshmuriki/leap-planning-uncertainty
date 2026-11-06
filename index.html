@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=21">
+  <link rel="stylesheet" href="style.css?v=23">
 </head>
 <body>
 
@@ -308,6 +308,28 @@
       <figcaption>Overall task success, SPL<sub>act</sub>, task completion, and TC-SPL<sub>act</sub>. Adding action efficiency lowers every planner's score (ReAct: 45.3% &rarr; 36.9% SPL<sub>act</sub>; 71.7% &rarr; 59.1% TC-SPL<sub>act</sub>).</figcaption>
     </figure>
 
+    <h3>Explore the metrics</h3>
+    <div class="explorer" id="explorer">
+      <div class="ex-controls">
+        <div class="seg" data-key="metric" role="group" aria-label="Metric">
+          <button type="button" data-val="success">Task success</button><button type="button" data-val="spl">SPL<sub>act</sub></button><button type="button" data-val="completion">Completion</button><button type="button" data-val="tcspl">TC-SPL<sub>act</sub></button>
+        </div>
+        <div class="seg" data-key="by" role="group" aria-label="Break down by">
+          <button type="button" data-val="memory">By memory</button><button type="button" data-val="task">By task</button><button type="button" data-val="env">By environment</button>
+        </div>
+        <div class="seg" data-key="mem" role="group" aria-label="Initial memory" hidden>
+          <button type="button" data-val="ALL">All memory</button><button type="button" data-val="ACC">Accurate</button><button type="button" data-val="INC">Incomplete</button><button type="button" data-val="OUT">Outdated</button>
+        </div>
+      </div>
+      <div class="finding-scroll">
+        <table class="ex-table">
+          <thead><tr><th class="ex-group"></th><th class="react">ReAct</th><th class="vlm">VLM-TAMP</th><th class="tru">Tru-POMDP</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="ex-note"></p>
+    </div>
+
     <h3>Difficulty varies sharply by task</h3>
     <figure>
       <a href="static/images/spl_by_task.png"><img src="static/images/spl_by_task.png" alt="Bar chart of SPL_act per task T1 to T7 for the three planners" loading="lazy"></a>
@@ -457,6 +479,7 @@
   </div>
 </footer>
 
-<script src="main.js?v=9"></script>
+<script src="static/metrics_data.js?v=1"></script>
+<script src="main.js?v=10"></script>
 </body>
 </html>
