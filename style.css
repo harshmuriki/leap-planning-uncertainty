@@ -378,23 +378,31 @@ figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
 .seg button:hover:not(:disabled) { color: var(--accent); background: var(--bg-alt); }
 .seg button.on { background: var(--accent); color: #fff; }
 .seg button:disabled { opacity: .4; cursor: not-allowed; }
-.ex-table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
-.ex-table th, .ex-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); text-align: left; }
-.ex-table thead th { font-size: 13px; color: var(--c, var(--muted)); font-weight: 600; }
-.ex-table tbody th { font-weight: 500; white-space: nowrap; text-transform: none; letter-spacing: normal; font-size: 14px; color: var(--text); }
-.ex-table tbody th small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 400; }
-.ex-table tr.ref th, .ex-table tr.ref td { background: var(--bg-alt); }
-.ex-table td { width: 26%; }
-.ex-bar { display: flex; align-items: center; gap: 8px; }
-.ex-bar i {
-  flex: 1; height: 8px; border-radius: 4px; background: var(--bg-alt); position: relative; overflow: hidden;
+.ex-legend { display: flex; gap: 16px; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.ex-legend span { color: var(--c); display: inline-flex; align-items: center; gap: 6px; }
+.ex-legend span::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--c); }
+.ex-chart { --bar-h: 240px; position: relative; padding: 18px 0 0 34px; }
+.ex-grid { position: absolute; left: 34px; right: 0; top: 18px; height: var(--bar-h); pointer-events: none; }
+.ex-grid div { position: absolute; left: 0; right: 0; border-top: 1px solid var(--border); }
+.ex-grid div:first-child { border-top-color: var(--muted); }
+.ex-grid span { position: absolute; right: calc(100% + 6px); transform: translateY(-50%); font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ex-cols { position: relative; display: flex; }
+.ex-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.ex-col.ref { background: color-mix(in srgb, var(--bg-alt) 80%, transparent); border-radius: 6px 6px 0 0; }
+.ex-bars { height: var(--bar-h); display: flex; align-items: flex-end; justify-content: center; gap: 3px; padding: 0 6%; }
+.ex-b {
+  position: relative; flex: 1; max-width: 34px; height: var(--v); min-height: 1px; padding: 0; border: 0; cursor: pointer;
+  background: var(--c); border-radius: 3px 3px 0 0; transition: height .35s ease, opacity .15s;
 }
-.ex-bar i::after {
-  content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); background: var(--c); border-radius: 4px;
-  transition: width .35s ease;
+.ex-b:hover, .ex-b:focus-visible, .ex-b.sel { opacity: .75; outline: none; }
+.ex-b span {
+  position: absolute; bottom: calc(100% + 3px); left: 50%; transform: translateX(-50%);
+  font-size: 10.5px; color: var(--text); white-space: nowrap; font-variant-numeric: tabular-nums;
 }
-.ex-bar span { min-width: 38px; text-align: right; }
-.ex-table td.max span { font-weight: 700; }
+.ex-b.max span { font-weight: 700; }
+.ex-xl { text-align: center; font-size: 12.5px; line-height: 1.3; padding: 8px 2px 0; color: var(--text); }
+.ex-xl small { display: block; color: var(--muted); font-size: 11px; }
+.ex-readout { margin: 12px 0 0; font-size: 13.5px; min-height: 1.4em; }
 .ex-note { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
 
 /* ---------- bibtex ---------- */
@@ -442,11 +450,13 @@ figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
   .mem-table th, .mem-table td { padding: 8px 6px; }
   .finding-grid { grid-template-columns: 1fr; }
   .explorer { padding: 12px; }
-  .ex-table th, .ex-table td { padding: 6px 5px; }
-  .ex-bar i { display: none; }
-  .ex-table { font-size: 13px; }
-  .ex-table tbody th { white-space: normal; font-size: 13px; }
-  .ex-table thead th { font-size: 11.5px; }
+  .ex-chart { --bar-h: 200px; padding-left: 28px; }
+  .ex-grid { left: 28px; }
+  .ex-bars { gap: 1px; padding: 0 3%; }
+  .ex-b span { display: none; }
+  .ex-xl { font-size: 10.5px; overflow-wrap: anywhere; }
+  .ex-xl small { font-size: 9.5px; }
+  .ex-legend { gap: 10px; font-size: 12px; }
   .seg button { padding: 5px 9px; font-size: 12.5px; }
   .carousel-track { padding-inline: 6%; gap: 10px; }
   .slide { flex-basis: 88%; grid-template-columns: 1fr; gap: 12px; }

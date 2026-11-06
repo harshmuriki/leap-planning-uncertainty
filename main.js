@@ -151,38 +151,39 @@ if (carousel) {
   setActive(0);
 }
 
-// Metrics explorer: pick a metric and a breakdown; the table re-renders from window.METRICS.
-// Per-environment values exist only for TC-SPL_act, so that view locks the metric.
+// Metrics explorer: pick a metric and a breakdown; a vertical grouped bar chart re-renders
+// from window.METRICS. Per-environment values exist only for TC-SPL_act, so that view locks the metric.
 const explorer = document.getElementById('explorer');
 if (explorer && window.METRICS) {
   const D = window.METRICS;
   const state = { metric: 'tcspl', by: 'memory', mem: 'ALL' };
   const planners = ['react', 'vlm', 'tru'];
+  const plannerNames = { react: 'ReAct', vlm: 'VLM-TAMP', tru: 'Tru-POMDP' };
   const metricNames = { success: 'task success', spl: 'SPL<sub>act</sub>', completion: 'task completion', tcspl: 'TC-SPL<sub>act</sub>' };
   const memNames = { ACC: 'Accurate', INC: 'Incomplete', OUT: 'Outdated' };
   const taskNames = ['Water fetching', 'Package preparation', 'Book collection', 'Grocery organization',
     'Guest table preparation', 'Meal delivery', 'Household cleanup'];
   const envNames = { BASE: 'Target on a surface', SUB: 'Only a substitute', ABS: 'No suitable object',
     HID: 'Inside closed receptacle', DIS: 'Distractors present' };
-  const tbody = explorer.querySelector('tbody');
-  const groupHead = explorer.querySelector('.ex-group');
+  const chart = explorer.querySelector('.ex-chart');
   const note = explorer.querySelector('.ex-note');
+  const readout = explorer.querySelector('.ex-readout');
   const memSeg = explorer.querySelector('[data-key="mem"]');
 
-  const rows = () => {
+  // Each group: short x-axis label, its long name for the readout, run count, and values
+  const groups = () => {
     if (state.by === 'memory') return [
-      { label: 'All runs', sub: `n=${D.overall.all.n}`, vals: D.overall.all, ref: true },
-      ...['ACC', 'INC', 'OUT'].map((k) => ({ label: memNames[k], sub: `n=${D.memory[k].n}`, vals: D.memory[k] })),
+      { label: 'All', name: 'all runs', n: D.overall.all.n, vals: D.overall.all, ref: true },
+      ...['ACC', 'INC', 'OUT'].map((k) => ({ label: memNames[k], name: `${memNames[k].toLowerCase()} memory`, n: D.memory[k].n, vals: D.memory[k] })),
     ];
     if (state.by === 'task') return [
-      { label: 'All tasks', sub: `n=${D.overall.all.n}`, vals: D.overall.all, ref: true },
-      ...taskNames.map((name, i) => ({ label: `T${i + 1} ${name}`, sub: `n=${D.task[i + 1].n}`, vals: D.task[i + 1] })),
+      { label: 'All', name: 'all tasks', n: D.overall.all.n, vals: D.overall.all, ref: true },
+      ...taskNames.map((name, i) => ({ label: `T${i + 1}`, name: `T${i + 1} ${name}`, n: D.task[i + 1].n, vals: D.task[i + 1] })),
     ];
-    return ['BASE', 'SUB', 'ABS', 'HID', 'DIS'].map((k) => {
-      const cell = D.env[k][state.mem];
-      return { label: `${k} &middot; ${envNames[k]}`, sub: `n=${D.env[k].n} per planner${state.mem === 'ALL' ? ' per memory' : ''}`,
-        vals: Object.fromEntries(planners.map((p) => [p, { tcspl: cell[p] }])), ref: k === 'BASE' };
-    });
+    return ['BASE', 'SUB', 'ABS', 'HID', 'DIS'].map((k) => ({
+      label: k, name: `${k} (${envNames[k].toLowerCase()})`, n: D.env[k].n, ref: k === 'BASE',
+      vals: Object.fromEntries(planners.map((p) => [p, { tcspl: D.env[k][state.mem][p] }])),
+    }));
   };
 
   const render = () => {
@@ -192,17 +193,33 @@ if (explorer && window.METRICS) {
       if (seg.dataset.key === 'metric') b.disabled = state.by === 'env' && b.dataset.val !== 'tcspl';
     }));
     memSeg.hidden = state.by !== 'env';
-    groupHead.textContent = { memory: 'Initial memory', task: 'Task', env: 'Environment' }[state.by];
-    tbody.innerHTML = rows().map((r) => {
-      const v = planners.map((p) => r.vals[p][state.metric]);
+    const gs = groups();
+    const grid = [0, 25, 50, 75, 100].map((t) => `<div style="bottom:${t}%"><span>${t}</span></div>`).join('');
+    chart.innerHTML = `<div class="ex-grid">${grid}</div><div class="ex-cols">` + gs.map((g, gi) => {
+      const v = planners.map((p) => g.vals[p][state.metric]);
       const max = Math.max(...v);
-      return `<tr class="${r.ref ? 'ref' : ''}"><th scope="row">${r.label}<small>${r.sub}</small></th>` +
-        planners.map((p, i) => `<td class="${p}${v[i] === max && max > 0 ? ' max' : ''}" title="${v[i].toFixed(1)}%">` +
-          `<div class="ex-bar"><i style="--w:${v[i]}%"></i><span>${v[i].toFixed(1)}</span></div></td>`).join('') + '</tr>';
-    }).join('');
+      return `<div class="ex-col${g.ref ? ' ref' : ''}"><div class="ex-bars">` +
+        planners.map((p, i) => `<button type="button" class="ex-b ${p}${v[i] === max && max > 0 ? ' max' : ''}" style="--v:${v[i]}%" ` +
+          `data-g="${gi}" data-p="${p}" aria-label="${plannerNames[p]}, ${g.name}: ${v[i].toFixed(1)}%"><span>${v[i].toFixed(1)}</span></button>`).join('') +
+        `</div><div class="ex-xl">${g.label}<small>n=${g.n}</small></div></div>`;
+    }).join('') + '</div>';
+    chart.setAttribute('aria-label', `Bar chart of ${metricNames[state.metric].replace(/<[^>]+>/g, '')} by ${state.by}`);
+    chart.querySelectorAll('.ex-b').forEach((b) => {
+      const show = () => {
+        chart.querySelectorAll('.ex-b.sel').forEach((x) => x.classList.remove('sel'));
+        b.classList.add('sel');
+        const g = gs[b.dataset.g];
+        readout.innerHTML = `<strong class="c-${b.dataset.p}">${plannerNames[b.dataset.p]}</strong> &middot; ${g.name}: ` +
+          `<strong>${g.vals[b.dataset.p][state.metric].toFixed(1)}%</strong> ${metricNames[state.metric]} (n=${g.n})`;
+      };
+      b.addEventListener('mouseenter', show);
+      b.addEventListener('focus', show);
+      b.addEventListener('click', show);
+    });
+    readout.textContent = 'Hover or tap a bar for its exact value.';
     note.innerHTML = state.by === 'env'
-      ? `TC-SPL<sub>act</sub> (%) per environment configuration${state.mem === 'ALL' ? ', averaged equally over the three memory conditions' : ` with ${memNames[state.mem].toLowerCase()} memory`}. BASE covers all seven tasks; the others only the tasks where they apply, so use the &Delta; chart below for matched comparisons.`
-      : `${metricNames[state.metric][0].toUpperCase() + metricNames[state.metric].slice(1)} (%) by ${state.by === 'memory' ? 'initial-memory condition' : 'task'}. Bold marks the best planner in each row.`;
+      ? `TC-SPL<sub>act</sub> (%) per environment configuration${state.mem === 'ALL' ? ', averaged equally over the three memory conditions' : ` with ${memNames[state.mem].toLowerCase()} memory`}; n is runs per planner${state.mem === 'ALL' ? ' and memory condition' : ''}. BASE covers all seven tasks, the others only the tasks where they apply, so use the &Delta; chart below for matched comparisons.`
+      : `${metricNames[state.metric][0].toUpperCase() + metricNames[state.metric].slice(1)} (%) by ${state.by === 'memory' ? 'initial-memory condition' : 'task'}; n is runs per planner. Bold values mark the best planner in each group.`;
   };
 
   explorer.querySelectorAll('.seg').forEach((seg) => seg.addEventListener('click', (e) => {

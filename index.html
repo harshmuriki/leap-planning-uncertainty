@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=23">
+  <link rel="stylesheet" href="style.css?v=24">
 </head>
 <body>
 
@@ -321,12 +321,9 @@
           <button type="button" data-val="ALL">All memory</button><button type="button" data-val="ACC">Accurate</button><button type="button" data-val="INC">Incomplete</button><button type="button" data-val="OUT">Outdated</button>
         </div>
       </div>
-      <div class="finding-scroll">
-        <table class="ex-table">
-          <thead><tr><th class="ex-group"></th><th class="react">ReAct</th><th class="vlm">VLM-TAMP</th><th class="tru">Tru-POMDP</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
+      <div class="ex-legend"><span class="react">ReAct</span><span class="vlm">VLM-TAMP</span><span class="tru">Tru-POMDP</span></div>
+      <div class="ex-chart" role="img" aria-live="polite"></div>
+      <p class="ex-readout">Hover or tap a bar for its exact value.</p>
       <p class="ex-note"></p>
     </div>
 
@@ -480,6 +477,6 @@
 </footer>
 
 <script src="static/metrics_data.js?v=1"></script>
-<script src="main.js?v=10"></script>
+<script src="main.js?v=11"></script>
 </body>
 </html>
