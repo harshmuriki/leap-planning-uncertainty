@@ -151,14 +151,124 @@ if (carousel) {
   setActive(0);
 }
 
-// Metrics explorer: pick a metric and a breakdown; a vertical grouped bar chart re-renders
+// Shared hover/tap tooltip for chart marks and finding definitions
+const tip = document.createElement('div');
+tip.className = 'def-tip';
+tip.setAttribute('role', 'tooltip');
+document.body.appendChild(tip);
+const showTip = (el, html) => {
+  tip.innerHTML = html;
+  tip.classList.add('on');
+  const r = el.getBoundingClientRect();
+  const left = Math.min(r.left + r.width / 2 - tip.offsetWidth / 2, window.innerWidth - tip.offsetWidth - 8);
+  const above = r.top - tip.offsetHeight - 8;
+  tip.style.left = `${Math.max(8, left)}px`;
+  tip.style.top = `${above > 8 ? above : r.bottom + 8}px`;
+};
+const hideTip = () => tip.classList.remove('on');
+window.addEventListener('scroll', hideTip, { passive: true });
+
+const PLANNERS = ['react', 'vlm', 'tru'];
+const PLANNER_NAMES = { react: 'ReAct', vlm: 'VLM-TAMP', tru: 'Tru-POMDP' };
+const legendHtml = () => `<div class="ch-legend">${PLANNERS.map((p) => `<span class="${p}">${PLANNER_NAMES[p]}</span>`).join('')}</div>`;
+const wireTips = (root) => root.querySelectorAll('[data-tip]').forEach((m) => {
+  const on = () => showTip(m, m.dataset.tip);
+  m.addEventListener('mouseenter', on);
+  m.addEventListener('focus', on);
+  m.addEventListener('click', on);
+  m.addEventListener('mouseleave', hideTip);
+  m.addEventListener('blur', hideTip);
+});
+
+// Grouped vertical bars, one bar per planner per group. Handles negative values by
+// growing bars from the zero line. opts: groups [{label, sub, name, vals, ref}],
+// min, max, ticks, fmt (value -> text), tipFmt (planner, group, value -> html), labels (bool)
+function renderBars(el, opts) {
+  const { groups, min = 0, max = 100, ticks = [0, 25, 50, 75, 100], fmt, tipFmt, labels = true } = opts;
+  const pos = (v) => ((v - min) / (max - min)) * 100;
+  const zero = pos(0);
+  const grid = ticks.map((t) => `<div class="${t === 0 ? 'zero' : ''}" style="bottom:${pos(t)}%"><span>${t > 0 && min < 0 ? '+' + t : t}</span></div>`).join('');
+  el.innerHTML = `<div class="ch-plot"><div class="ch-grid">${grid}</div><div class="ch-cols">` + groups.map((g) => {
+    const vals = PLANNERS.map((p) => g.vals[p]);
+    const best = Math.max(...vals);
+    return `<div class="ch-col${g.ref ? ' ref' : ''}"><div class="ch-bars">` + PLANNERS.map((p, i) => {
+      const v = vals[i];
+      const h = Math.abs(pos(v) - zero);
+      const neg = v < 0;
+      return `<div class="ch-slot"><button type="button" class="ch-b ${p}${neg ? ' neg' : ''}" ` +
+        `style="${neg ? `top:${100 - zero}%` : `bottom:${zero}%`};height:${h}%" ` +
+        `aria-label="${PLANNER_NAMES[p]}, ${g.name || g.label}: ${fmt(v)}" data-tip="${tipFmt(p, g, v).replace(/"/g, '&quot;')}">` +
+        (labels ? `<span class="${v === best && !opts.noBest ? 'best' : ''}">${fmt(v)}</span>` : '') + '</button></div>';
+    }).join('') + `</div><div class="ch-xl">${g.label}${g.sub ? `<small>${g.sub}</small>` : ''}</div></div>`;
+  }).join('') + '</div></div>';
+  wireTips(el);
+}
+
+// Rows of planner x memory, columns of environment configuration, shaded by value
+function renderHeat(el, D) {
+  const envs = ['BASE', 'SUB', 'ABS', 'HID', 'DIS'];
+  const envNames = { BASE: 'Target on a surface', SUB: 'Only a substitute', ABS: 'No suitable object', HID: 'Inside closed receptacle', DIS: 'Distractors present' };
+  const mems = [['ACC', 'Accurate'], ['INC', 'Incomplete'], ['OUT', 'Outdated']];
+  const all = PLANNERS.flatMap((p) => mems.flatMap(([m]) => envs.map((e) => D.env[e][m][p])));
+  const lo = Math.min(...all);
+  const hi = Math.max(...all);
+  const body = PLANNERS.map((p) => mems.map(([m, mName], mi) => `<tr class="${mi === 0 ? 'first' : ''}">` +
+    (mi === 0 ? `<th scope="rowgroup" rowspan="3" class="hm-planner ${p}"><span>${PLANNER_NAMES[p]}</span></th>` : '') +
+    `<th scope="row" class="hm-mem">${mName}</th>` +
+    envs.map((e) => {
+      const v = D.env[e][m][p];
+      const best = Math.max(...envs.map((x) => D.env[x][m][p]));
+      return `<td style="--h:${Math.round(((v - lo) / (hi - lo)) * 100)}%" class="${v === best ? 'best' : ''}" tabindex="0" ` +
+        `data-tip="<strong>${PLANNER_NAMES[p]}</strong> &middot; ${mName.toLowerCase()} memory &middot; ${e}<br>${v.toFixed(1)}% TC-SPL<sub>act</sub> (n=${D.env[e].n})">${v.toFixed(1)}</td>`;
+    }).join('') + '</tr>').join('')).join('');
+  el.innerHTML = `<div class="finding-scroll"><table class="hm-table"><thead><tr><th colspan="2"></th>` +
+    envs.map((e) => `<th scope="col">${e}<small>${envNames[e]}</small></th>`).join('') + `</tr></thead><tbody>${body}</tbody></table></div>`;
+  wireTips(el);
+}
+
+if (window.METRICS) {
+  const D = window.METRICS;
+  const pct = (v) => v.toFixed(1);
+  const overall = document.getElementById('chart-overall');
+  if (overall) {
+    const metrics = [['success', 'Task success'], ['spl', 'SPL<sub>act</sub>'], ['completion', 'Completion'], ['tcspl', 'TC-SPL<sub>act</sub>']];
+    overall.innerHTML = legendHtml() + '<div class="ch-body"></div>';
+    renderBars(overall.querySelector('.ch-body'), {
+      groups: metrics.map(([k, label]) => ({ label, name: label.replace(/<[^>]+>/g, ''), vals: Object.fromEntries(PLANNERS.map((p) => [p, D.overall.all[p][k]])) })),
+      fmt: pct, tipFmt: (p, g, v) => `<strong>${PLANNER_NAMES[p]}</strong> &middot; ${g.label}: ${v.toFixed(1)}% (n=450)`,
+    });
+  }
+  const byTask = document.getElementById('chart-spl-task');
+  if (byTask) {
+    const names = ['Water fetching', 'Package preparation', 'Book collection', 'Grocery organization', 'Guest table preparation', 'Meal delivery', 'Household cleanup'];
+    byTask.innerHTML = legendHtml() + '<div class="ch-body"></div>';
+    renderBars(byTask.querySelector('.ch-body'), {
+      groups: names.map((n, i) => ({ label: `T${i + 1}`, sub: n, name: `T${i + 1} ${n}`, vals: Object.fromEntries(PLANNERS.map((p) => [p, D.task[i + 1][p].spl])) })),
+      fmt: pct, labels: false,
+      tipFmt: (p, g, v) => `<strong>${PLANNER_NAMES[p]}</strong> &middot; ${g.name}: ${v.toFixed(1)}% SPL<sub>act</sub> (n=${D.task[g.label.slice(1)].n})`,
+    });
+  }
+  const delta = document.getElementById('chart-delta');
+  if (delta) {
+    const envs = [['SUB', 'Substitute'], ['ABS', 'Absent'], ['HID', 'Hidden'], ['DIS', 'Distractors']];
+    delta.innerHTML = legendHtml() + '<div class="ch-body"></div>';
+    renderBars(delta.querySelector('.ch-body'), {
+      groups: envs.map(([k, label]) => ({ label, sub: k, name: `${label} (${k})`, vals: D.delta[k] })),
+      min: -25, max: 20, ticks: [-20, -10, 0, 10, 20], noBest: true,
+      fmt: (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(1),
+      tipFmt: (p, g, v) => `<strong>${PLANNER_NAMES[p]}</strong> &middot; ${g.name}: ${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)} pts TC-SPL<sub>act</sub> vs BASE`,
+    });
+  }
+  const heat = document.getElementById('chart-scenario-memory');
+  if (heat) renderHeat(heat, D);
+}
+
+// Metrics explorer: pick a metric and a breakdown; the grouped bar chart re-renders
 // from window.METRICS. Per-environment values exist only for TC-SPL_act, so that view locks the metric.
 const explorer = document.getElementById('explorer');
 if (explorer && window.METRICS) {
   const D = window.METRICS;
   const state = { metric: 'tcspl', by: 'memory', mem: 'ALL' };
-  const planners = ['react', 'vlm', 'tru'];
-  const plannerNames = { react: 'ReAct', vlm: 'VLM-TAMP', tru: 'Tru-POMDP' };
   const metricNames = { success: 'task success', spl: 'SPL<sub>act</sub>', completion: 'task completion', tcspl: 'TC-SPL<sub>act</sub>' };
   const memNames = { ACC: 'Accurate', INC: 'Incomplete', OUT: 'Outdated' };
   const taskNames = ['Water fetching', 'Package preparation', 'Book collection', 'Grocery organization',
@@ -167,22 +277,21 @@ if (explorer && window.METRICS) {
     HID: 'Inside closed receptacle', DIS: 'Distractors present' };
   const chart = explorer.querySelector('.ex-chart');
   const note = explorer.querySelector('.ex-note');
-  const readout = explorer.querySelector('.ex-readout');
   const memSeg = explorer.querySelector('[data-key="mem"]');
 
-  // Each group: short x-axis label, its long name for the readout, run count, and values
   const groups = () => {
+    const pick = (src) => Object.fromEntries(PLANNERS.map((p) => [p, src[p][state.metric]]));
     if (state.by === 'memory') return [
-      { label: 'All', name: 'all runs', n: D.overall.all.n, vals: D.overall.all, ref: true },
-      ...['ACC', 'INC', 'OUT'].map((k) => ({ label: memNames[k], name: `${memNames[k].toLowerCase()} memory`, n: D.memory[k].n, vals: D.memory[k] })),
+      { label: 'All', sub: `n=${D.overall.all.n}`, name: 'all runs', n: D.overall.all.n, vals: pick(D.overall.all), ref: true },
+      ...['ACC', 'INC', 'OUT'].map((k) => ({ label: memNames[k], sub: `n=${D.memory[k].n}`, name: `${memNames[k].toLowerCase()} memory`, n: D.memory[k].n, vals: pick(D.memory[k]) })),
     ];
     if (state.by === 'task') return [
-      { label: 'All', name: 'all tasks', n: D.overall.all.n, vals: D.overall.all, ref: true },
-      ...taskNames.map((name, i) => ({ label: `T${i + 1}`, name: `T${i + 1} ${name}`, n: D.task[i + 1].n, vals: D.task[i + 1] })),
+      { label: 'All', sub: `n=${D.overall.all.n}`, name: 'all tasks', n: D.overall.all.n, vals: pick(D.overall.all), ref: true },
+      ...taskNames.map((name, i) => ({ label: `T${i + 1}`, sub: `n=${D.task[i + 1].n}`, name: `T${i + 1} ${name}`, n: D.task[i + 1].n, vals: pick(D.task[i + 1]) })),
     ];
     return ['BASE', 'SUB', 'ABS', 'HID', 'DIS'].map((k) => ({
-      label: k, name: `${k} (${envNames[k].toLowerCase()})`, n: D.env[k].n, ref: k === 'BASE',
-      vals: Object.fromEntries(planners.map((p) => [p, { tcspl: D.env[k][state.mem][p] }])),
+      label: k, sub: `n=${D.env[k].n}`, name: `${k} (${envNames[k].toLowerCase()})`, n: D.env[k].n, ref: k === 'BASE',
+      vals: Object.fromEntries(PLANNERS.map((p) => [p, D.env[k][state.mem][p]])),
     }));
   };
 
@@ -193,33 +302,14 @@ if (explorer && window.METRICS) {
       if (seg.dataset.key === 'metric') b.disabled = state.by === 'env' && b.dataset.val !== 'tcspl';
     }));
     memSeg.hidden = state.by !== 'env';
-    const gs = groups();
-    const grid = [0, 25, 50, 75, 100].map((t) => `<div style="bottom:${t}%"><span>${t}</span></div>`).join('');
-    chart.innerHTML = `<div class="ex-grid">${grid}</div><div class="ex-cols">` + gs.map((g, gi) => {
-      const v = planners.map((p) => g.vals[p][state.metric]);
-      const max = Math.max(...v);
-      return `<div class="ex-col${g.ref ? ' ref' : ''}"><div class="ex-bars">` +
-        planners.map((p, i) => `<button type="button" class="ex-b ${p}${v[i] === max && max > 0 ? ' max' : ''}" style="--v:${v[i]}%" ` +
-          `data-g="${gi}" data-p="${p}" aria-label="${plannerNames[p]}, ${g.name}: ${v[i].toFixed(1)}%"><span>${v[i].toFixed(1)}</span></button>`).join('') +
-        `</div><div class="ex-xl">${g.label}<small>n=${g.n}</small></div></div>`;
-    }).join('') + '</div>';
-    chart.setAttribute('aria-label', `Bar chart of ${metricNames[state.metric].replace(/<[^>]+>/g, '')} by ${state.by}`);
-    chart.querySelectorAll('.ex-b').forEach((b) => {
-      const show = () => {
-        chart.querySelectorAll('.ex-b.sel').forEach((x) => x.classList.remove('sel'));
-        b.classList.add('sel');
-        const g = gs[b.dataset.g];
-        readout.innerHTML = `<strong class="c-${b.dataset.p}">${plannerNames[b.dataset.p]}</strong> &middot; ${g.name}: ` +
-          `<strong>${g.vals[b.dataset.p][state.metric].toFixed(1)}%</strong> ${metricNames[state.metric]} (n=${g.n})`;
-      };
-      b.addEventListener('mouseenter', show);
-      b.addEventListener('focus', show);
-      b.addEventListener('click', show);
+    hideTip();
+    renderBars(chart, {
+      groups: groups(), fmt: (v) => v.toFixed(1), labels: state.by !== 'task',
+      tipFmt: (p, g, v) => `<strong>${PLANNER_NAMES[p]}</strong> &middot; ${g.name}: ${v.toFixed(1)}% ${metricNames[state.metric]} (n=${g.n})`,
     });
-    readout.textContent = 'Hover or tap a bar for its exact value.';
     note.innerHTML = state.by === 'env'
       ? `TC-SPL<sub>act</sub> (%) per environment configuration${state.mem === 'ALL' ? ', averaged equally over the three memory conditions' : ` with ${memNames[state.mem].toLowerCase()} memory`}; n is runs per planner${state.mem === 'ALL' ? ' and memory condition' : ''}. BASE covers all seven tasks, the others only the tasks where they apply, so use the &Delta; chart below for matched comparisons.`
-      : `${metricNames[state.metric][0].toUpperCase() + metricNames[state.metric].slice(1)} (%) by ${state.by === 'memory' ? 'initial-memory condition' : 'task'}; n is runs per planner. Bold values mark the best planner in each group.`;
+      : `${metricNames[state.metric][0].toUpperCase() + metricNames[state.metric].slice(1)} (%) by ${state.by === 'memory' ? 'initial-memory condition' : 'task'}; n is runs per planner. Hover or tap a bar for its exact value${state.by === 'task' ? '' : '; bold values mark the best planner in each group'}.`;
   };
 
   explorer.querySelectorAll('.seg').forEach((seg) => seg.addEventListener('click', (e) => {
@@ -234,47 +324,33 @@ if (explorer && window.METRICS) {
 
 // Failure / inefficiency tables: one-line definition above a row on hover, focus, or tap
 const defRows = [...document.querySelectorAll('.finding-table tbody tr')].filter((tr) => tr.querySelector('th[data-def]'));
-if (defRows.length) {
-  const tip = document.createElement('div');
-  tip.className = 'def-tip';
-  tip.setAttribute('role', 'tooltip');
-  document.body.appendChild(tip);
-  let current = null;
-  let shownAt = 0;
-
-  const show = (tr) => {
-    shownAt = Date.now();
-    const th = tr.querySelector('th[data-def]');
-    if (current) current.classList.remove('def-on');
-    current = tr;
-    tr.classList.add('def-on');
-    tip.textContent = th.dataset.def;
-    const r = th.getBoundingClientRect();
-    tip.style.left = '0px';
-    tip.classList.add('on');
-    const left = Math.min(r.left, window.innerWidth - tip.offsetWidth - 8);
-    const above = r.top - tip.offsetHeight - 6;
-    tip.style.left = `${Math.max(8, left)}px`;
-    tip.style.top = `${above > 8 ? above : r.bottom + 6}px`;
-  };
-  const hide = () => {
-    if (current) current.classList.remove('def-on');
-    current = null;
-    tip.classList.remove('on');
-  };
-
-  defRows.forEach((tr) => {
-    const th = tr.querySelector('th[data-def]');
-    th.setAttribute('aria-description', th.dataset.def);
-    tr.addEventListener('mouseenter', () => show(tr));
-    tr.addEventListener('mouseleave', hide);
-    th.addEventListener('focus', () => show(tr));
-    th.addEventListener('blur', hide);
-    // A tap fires mouseenter then click; only a second tap should close it
-    tr.addEventListener('click', () => (current === tr && Date.now() - shownAt > 400 ? hide() : show(tr)));
-  });
-  window.addEventListener('scroll', hide, { passive: true });
-}
+let defRow = null;
+let defShownAt = 0;
+const showDef = (tr) => {
+  if (defRow) defRow.classList.remove('def-on');
+  defRow = tr;
+  defShownAt = Date.now();
+  tr.classList.add('def-on');
+  const th = tr.querySelector('th[data-def]');
+  showTip(th, th.dataset.def);
+  // Anchor definitions to the label's left edge rather than its centre
+  tip.style.left = `${Math.max(8, Math.min(th.getBoundingClientRect().left, window.innerWidth - tip.offsetWidth - 8))}px`;
+};
+const hideDef = () => {
+  if (defRow) defRow.classList.remove('def-on');
+  defRow = null;
+  hideTip();
+};
+defRows.forEach((tr) => {
+  const th = tr.querySelector('th[data-def]');
+  th.setAttribute('aria-description', th.dataset.def);
+  tr.addEventListener('mouseenter', () => showDef(tr));
+  tr.addEventListener('mouseleave', hideDef);
+  th.addEventListener('focus', () => showDef(tr));
+  th.addEventListener('blur', hideDef);
+  // A tap fires mouseenter then click; only a second tap should close it
+  tr.addEventListener('click', () => (defRow === tr && Date.now() - defShownAt > 400 ? hideDef() : showDef(tr)));
+});
 
 // Highlight the nav link for the section currently in view
 const links = [...document.querySelectorAll('.nav-links a, .dotnav a')];

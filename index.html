@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=26">
+  <link rel="stylesheet" href="style.css?v=28">
 </head>
 <body>
 
@@ -86,7 +86,7 @@
         <span class="compare-badge">T5 &middot; BASE &times; Outdated &middot; 2&times;</span>
       </div>
       <div class="compare-tabs"><button type="button" class="compare-tab react" data-actions="31"><span class="tab-progress"></span>ReAct</button><button type="button" class="compare-tab vlm" data-actions="31"><span class="tab-progress"></span>VLM-TAMP</button><button type="button" class="compare-tab tru" data-actions="28"><span class="tab-progress"></span>Tru-POMDP</button></div>
-      <p class="video-note">Guest table preparation with stale memory of the soap, a glass and the plate. All three planners succeed &mdash; <span class="compare-stat"></span> (reference: 24).</p>
+      <p class="video-note">Guest table preparation with stale memory of the soap, a glass and the plate. All three planners succeed &mdash; <span class="compare-stat"></span>.</p>
     </div>
     <p class="teaser-caption">
       A robot&rsquo;s memory of a home can become outdated. Objects can be moved, replaced, or fully removed.
@@ -304,7 +304,7 @@
       <div class="hl tru"><span class="num">32.7%</span><span class="lbl">Tru-POMDP success</span><span class="sub">56.2% completion</span></div>
     </div>
     <figure>
-      <img src="static/images/overall_metrics.png" alt="Bar chart of task success, SPL_act, task completion, and TC-SPL_act for the three planners" loading="lazy">
+      <div class="chart" id="chart-overall" role="group" aria-label="Bar chart of task success, SPL_act, task completion and TC-SPL_act per planner"></div>
       <figcaption>Overall task success, SPL<sub>act</sub>, task completion, and TC-SPL<sub>act</sub>. Adding action efficiency lowers every planner's score (ReAct: 45.3% &rarr; 36.9% SPL<sub>act</sub>; 71.7% &rarr; 59.1% TC-SPL<sub>act</sub>).</figcaption>
     </figure>
 
@@ -321,15 +321,14 @@
           <button type="button" data-val="ALL">All memory</button><button type="button" data-val="ACC">Accurate</button><button type="button" data-val="INC">Incomplete</button><button type="button" data-val="OUT">Outdated</button>
         </div>
       </div>
-      <div class="ex-legend"><span class="react">ReAct</span><span class="vlm">VLM-TAMP</span><span class="tru">Tru-POMDP</span></div>
-      <div class="ex-chart" role="img" aria-live="polite"></div>
-      <p class="ex-readout">Hover or tap a bar for its exact value.</p>
+      <div class="ch-legend"><span class="react">ReAct</span><span class="vlm">VLM-TAMP</span><span class="tru">Tru-POMDP</span></div>
+      <div class="ex-chart" role="group" aria-live="polite"></div>
       <p class="ex-note"></p>
     </div>
 
     <h3>Difficulty varies sharply by task</h3>
     <figure>
-      <a href="static/images/spl_by_task.png"><img src="static/images/spl_by_task.png" alt="Bar chart of SPL_act per task T1 to T7 for the three planners" loading="lazy"></a>
+      <div class="chart" id="chart-spl-task" role="group" aria-label="Bar chart of SPL_act per task per planner"></div>
       <figcaption>SPL<sub>act</sub> per task, averaged over variants and repetitions. T1 is nearly solved by ReAct and VLM-TAMP (0.73, 0.70), while T5 and T6 are almost never completed efficiently and Tru-POMDP never succeeds on T4.
         ReAct leads on five of seven tasks; Tru-POMDP leads on T2 and T5.</figcaption>
     </figure>
@@ -356,13 +355,13 @@
     </div>
 
     <figure>
-      <a href="static/images/tc_spl_scenario_memory.png"><img src="static/images/tc_spl_scenario_memory.png" alt="TC-SPL_act by environment scenario and initial memory, one panel per planner" loading="lazy"></a>
-      <figcaption>TC-SPL<sub>act</sub> across environment scenarios and initial-memory conditions for each planner. Target exists, on surface, and no distractors together form the shared BASE configuration. Click to enlarge.</figcaption>
+      <div class="chart" id="chart-scenario-memory" role="group" aria-label="TC-SPL_act by environment configuration and initial memory per planner"></div>
+      <figcaption>TC-SPL<sub>act</sub> across environment scenarios and initial-memory conditions for each planner. Darker cells score higher; bold marks each row&rsquo;s best configuration. BASE averages all seven tasks, the others only the tasks where they apply.</figcaption>
     </figure>
 
     <h3>Environment configurations vs. BASE</h3>
     <figure>
-      <img src="static/images/memory_uncertainity_averages_v2.png" alt="Change in TC-SPL_act from BASE across SUB, ABS, HID, and DIS for each planner" loading="lazy">
+      <div class="chart" id="chart-delta" role="group" aria-label="Change in TC-SPL_act from BASE per environment configuration and planner"></div>
       <figcaption>On average, most environment changes lower performance. &Delta;TC-SPL<sub>act</sub> from BASE in percentage points, averaged over memory conditions.
         <strong>Absent</strong> and <strong>hidden</strong> targets hurt every planner, ReAct most (&minus;14.0 and &minus;18.8 pts).
         <strong>Substitutes</strong> and <strong>distractors</strong> split them: VLM-TAMP gains (+9.9, +13.1 pts), while Tru-POMDP drops with substitutes (&minus;12.7 pts).</figcaption>
@@ -476,7 +475,7 @@
   </div>
 </footer>
 
-<script src="static/metrics_data.js?v=1"></script>
-<script src="main.js?v=12"></script>
+<script src="static/metrics_data.js?v=2"></script>
+<script src="main.js?v=13"></script>
 </body>
 </html>
