@@ -232,6 +232,50 @@ if (explorer && window.METRICS) {
   render();
 }
 
+// Failure / inefficiency tables: one-line definition above a row on hover, focus, or tap
+const defRows = [...document.querySelectorAll('.finding-table tbody tr')].filter((tr) => tr.querySelector('th[data-def]'));
+if (defRows.length) {
+  const tip = document.createElement('div');
+  tip.className = 'def-tip';
+  tip.setAttribute('role', 'tooltip');
+  document.body.appendChild(tip);
+  let current = null;
+  let shownAt = 0;
+
+  const show = (tr) => {
+    shownAt = Date.now();
+    const th = tr.querySelector('th[data-def]');
+    if (current) current.classList.remove('def-on');
+    current = tr;
+    tr.classList.add('def-on');
+    tip.textContent = th.dataset.def;
+    const r = th.getBoundingClientRect();
+    tip.style.left = '0px';
+    tip.classList.add('on');
+    const left = Math.min(r.left, window.innerWidth - tip.offsetWidth - 8);
+    const above = r.top - tip.offsetHeight - 6;
+    tip.style.left = `${Math.max(8, left)}px`;
+    tip.style.top = `${above > 8 ? above : r.bottom + 6}px`;
+  };
+  const hide = () => {
+    if (current) current.classList.remove('def-on');
+    current = null;
+    tip.classList.remove('on');
+  };
+
+  defRows.forEach((tr) => {
+    const th = tr.querySelector('th[data-def]');
+    th.setAttribute('aria-description', th.dataset.def);
+    tr.addEventListener('mouseenter', () => show(tr));
+    tr.addEventListener('mouseleave', hide);
+    th.addEventListener('focus', () => show(tr));
+    th.addEventListener('blur', hide);
+    // A tap fires mouseenter then click; only a second tap should close it
+    tr.addEventListener('click', () => (current === tr && Date.now() - shownAt > 400 ? hide() : show(tr)));
+  });
+  window.addEventListener('scroll', hide, { passive: true });
+}
+
 // Highlight the nav link for the section currently in view
 const links = [...document.querySelectorAll('.nav-links a, .dotnav a')];
 const sections = [...new Set(links.map((a) => a.getAttribute('href')))].map((h) => document.querySelector(h));

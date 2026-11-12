@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=25">
+  <link rel="stylesheet" href="style.css?v=26">
 </head>
 <body>
 
@@ -369,7 +369,7 @@
     </figure>
 
     <h3>Failure &amp; inefficiency analysis</h3>
-    <p>Rule-based labels on execution traces, following prior embodied-agent error analyses<a class="cite" href="#ref-10">[10, 11]</a>. <strong>Failures</strong> explain why unsuccessful runs failed; <strong>inefficiencies</strong> capture wasted actions in any run. Both tables report the share of all 450 runs per planner. Findings overlap, so a failure column does not sum to that planner's failure rate. Darker cells are more frequent; bold marks the highest in each row. Hover a finding for its definition.</p>
+    <p>Rule-based labels on execution traces, following prior embodied-agent error analyses<a class="cite" href="#ref-10">[10, 11]</a>. <strong>Failures</strong> explain why unsuccessful runs failed; <strong>inefficiencies</strong> capture wasted actions in any run. Both tables report the share of all 450 runs per planner. Findings overlap, so a failure column does not sum to that planner's failure rate. Darker cells are more frequent; bold marks the highest in each row. Hover or tap a row for its definition.</p>
     <div class="finding-grid">
     <figure class="finding-fig">
       <div class="finding-scroll">
@@ -377,15 +377,15 @@
         <caption>Failures <span>&middot; % of all runs</span></caption>
         <thead><tr><th>Finding</th><th class="react">ReAct<small>n=450</small><small>246 failed</small></th><th class="vlm">VLM-TAMP<small>n=450</small><small>306 failed</small></th><th class="tru">Tru-POMDP<small>n=450</small><small>303 failed</small></th></tr></thead>
         <tbody>
-          <tr><th scope="row" title="Found, but never put where the task needs it">Object not placed</th><td style="--h:22%">12.9</td><td class="max" style="--h:58%">34.9</td><td style="--h:51%">30.4</td></tr>
-          <tr><th scope="row" title="A required action (e.g. heat, switch off) was skipped">Missing action</th><td style="--h:34%">20.4</td><td class="max" style="--h:55%">32.7</td><td style="--h:41%">24.4</td></tr>
-          <tr><th scope="row" title="Object placed in the wrong location">Incorrect placement</th><td class="max" style="--h:49%">29.3</td><td style="--h:45%">26.9</td><td style="--h:18%">11.1</td></tr>
-          <tr><th scope="row" title="A needed object was never found">Object not found</th><td style="--h:18%">10.9</td><td class="max" style="--h:37%">22.4</td><td style="--h:21%">12.4</td></tr>
-          <tr><th scope="row" title="Stuck, or kept executing without progress">Insufficient planning</th><td style="--h:2%">0.9</td><td style="--h:17%">10.0</td><td class="max" style="--h:20%">11.8</td></tr>
-          <tr><th scope="row" title="Tree of Hypotheses returned no usable goals (Tru-POMDP only)">No hypotheses</th><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td><td class="max" style="--h:30%">17.8</td></tr>
-          <tr><th scope="row" title="Used a distractor instead of the task object">Wrong object</th><td style="--h:2%">0.9</td><td style="--h:4%">2.4</td><td class="max" style="--h:6%">3.6</td></tr>
-          <tr><th scope="row" title="A step was done after the step it had to precede">Wrong order</th><td class="max" style="--h:5%">2.9</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
-          <tr><th scope="row" title="Kept planning or searching after evidence said to abandon">Failure to stop</th><td class="max" style="--h:3%">2.0</td><td style="--h:0%">0.0</td><td style="--h:1%">0.4</td></tr>
+          <tr><th scope="row" data-def="Found, but never put where the task needs it" tabindex="0">Object not placed</th><td style="--h:22%">12.9</td><td class="max" style="--h:58%">34.9</td><td style="--h:51%">30.4</td></tr>
+          <tr><th scope="row" data-def="A required action (e.g. heat, switch off) was skipped" tabindex="0">Missing action</th><td style="--h:34%">20.4</td><td class="max" style="--h:55%">32.7</td><td style="--h:41%">24.4</td></tr>
+          <tr><th scope="row" data-def="Object placed in the wrong location" tabindex="0">Incorrect placement</th><td class="max" style="--h:49%">29.3</td><td style="--h:45%">26.9</td><td style="--h:18%">11.1</td></tr>
+          <tr><th scope="row" data-def="A needed object was never found" tabindex="0">Object not found</th><td style="--h:18%">10.9</td><td class="max" style="--h:37%">22.4</td><td style="--h:21%">12.4</td></tr>
+          <tr><th scope="row" data-def="Stuck, or kept executing without progress" tabindex="0">Insufficient planning</th><td style="--h:2%">0.9</td><td style="--h:17%">10.0</td><td class="max" style="--h:20%">11.8</td></tr>
+          <tr><th scope="row" data-def="Tree of Hypotheses returned no usable goals (Tru-POMDP only)" tabindex="0">No hypotheses</th><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td><td class="max" style="--h:30%">17.8</td></tr>
+          <tr><th scope="row" data-def="Used a distractor instead of the task object" tabindex="0">Wrong object</th><td style="--h:2%">0.9</td><td style="--h:4%">2.4</td><td class="max" style="--h:6%">3.6</td></tr>
+          <tr><th scope="row" data-def="A step was done after the step it had to precede" tabindex="0">Wrong order</th><td class="max" style="--h:5%">2.9</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
+          <tr><th scope="row" data-def="Kept planning or searching after evidence said to abandon" tabindex="0">Failure to stop</th><td class="max" style="--h:3%">2.0</td><td style="--h:0%">0.0</td><td style="--h:1%">0.4</td></tr>
         </tbody>
       </table>
       </div>
@@ -397,11 +397,11 @@
         <caption>Inefficiencies <span>&middot; % of all runs</span></caption>
         <thead><tr><th>Finding</th><th class="react">ReAct<small>n=450</small></th><th class="vlm">VLM-TAMP<small>n=450</small></th><th class="tru">Tru-POMDP<small>n=450</small></th></tr></thead>
         <tbody>
-          <tr><th scope="row" title="No task, exploration, or recovery purpose">Unnecessary actions</th><td style="--h:44%">26.2</td><td style="--h:31%">18.4</td><td class="max" style="--h:87%">52.4</td></tr>
-          <tr><th scope="row" title="Tried an action without its prerequisites">Precondition error</th><td class="max" style="--h:77%">46.0</td><td style="--h:23%">13.8</td><td style="--h:38%">23.1</td></tr>
-          <tr><th scope="row" title="Same action or sequence several times in a row">Repeated actions</th><td style="--h:4%">2.4</td><td style="--h:50%">30.2</td><td class="max" style="--h:68%">41.1</td></tr>
-          <tr><th scope="row" title="Kept going after it should have stopped (successful runs)">Failure to stop</th><td style="--h:4%">2.4</td><td style="--h:0%">0.0</td><td class="max" style="--h:6%">3.6</td></tr>
-          <tr><th scope="row" title="Tried to use an object that does not exist">Hallucinated object</th><td class="max" style="--h:0%">0.2</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
+          <tr><th scope="row" data-def="No task, exploration, or recovery purpose" tabindex="0">Unnecessary actions</th><td style="--h:44%">26.2</td><td style="--h:31%">18.4</td><td class="max" style="--h:87%">52.4</td></tr>
+          <tr><th scope="row" data-def="Tried an action without its prerequisites" tabindex="0">Precondition error</th><td class="max" style="--h:77%">46.0</td><td style="--h:23%">13.8</td><td style="--h:38%">23.1</td></tr>
+          <tr><th scope="row" data-def="Same action or sequence several times in a row" tabindex="0">Repeated actions</th><td style="--h:4%">2.4</td><td style="--h:50%">30.2</td><td class="max" style="--h:68%">41.1</td></tr>
+          <tr><th scope="row" data-def="Kept going after it should have stopped (successful runs)" tabindex="0">Failure to stop</th><td style="--h:4%">2.4</td><td style="--h:0%">0.0</td><td class="max" style="--h:6%">3.6</td></tr>
+          <tr><th scope="row" data-def="Tried to use an object that does not exist" tabindex="0">Hallucinated object</th><td class="max" style="--h:0%">0.2</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
         </tbody>
       </table>
       </div>
@@ -477,6 +477,6 @@
 </footer>
 
 <script src="static/metrics_data.js?v=1"></script>
-<script src="main.js?v=11"></script>
+<script src="main.js?v=12"></script>
 </body>
 </html>

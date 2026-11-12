@@ -367,6 +367,16 @@ figcaption { font-size: 14.5px; color: var(--muted); margin-top: 10px; }
   background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
 }
 
+.finding-table tbody th[data-def] { text-decoration: underline dotted color-mix(in srgb, var(--muted) 60%, transparent); text-underline-offset: 3px; }
+.finding-table tbody tr:hover > *, .finding-table tbody tr.def-on > * { box-shadow: inset 0 0 0 999px color-mix(in srgb, var(--accent) 6%, transparent); }
+.finding-table tbody th[data-def]:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.def-tip {
+  position: fixed; z-index: 50; max-width: 280px; padding: 6px 10px; border-radius: 6px;
+  background: #1f2329; color: #fff; font-size: 12.5px; line-height: 1.4; pointer-events: none;
+  box-shadow: 0 4px 14px rgba(0,0,0,.18); opacity: 0; transform: translateY(4px); transition: opacity .12s, transform .12s;
+}
+.def-tip.on { opacity: 1; transform: none; }
+
 /* ---------- metrics explorer ---------- */
 .explorer {
   margin-top: 16px; padding: 18px; background: var(--surface); border: 1px solid var(--border);
