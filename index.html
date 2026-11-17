@@ -376,15 +376,15 @@
         <caption>Failures <span>&middot; % of all runs</span></caption>
         <thead><tr><th>Finding</th><th class="react">ReAct<small>n=450</small><small>246 failed</small></th><th class="vlm">VLM-TAMP<small>n=450</small><small>306 failed</small></th><th class="tru">Tru-POMDP<small>n=450</small><small>303 failed</small></th></tr></thead>
         <tbody>
-          <tr><th scope="row" data-def="Found, but never put where the task needs it" tabindex="0">Object not placed</th><td style="--h:22%">12.9</td><td class="max" style="--h:58%">34.9</td><td style="--h:51%">30.4</td></tr>
-          <tr><th scope="row" data-def="A required action (e.g. heat, switch off) was skipped" tabindex="0">Missing action</th><td style="--h:34%">20.4</td><td class="max" style="--h:55%">32.7</td><td style="--h:41%">24.4</td></tr>
-          <tr><th scope="row" data-def="Object placed in the wrong location" tabindex="0">Incorrect placement</th><td class="max" style="--h:49%">29.3</td><td style="--h:45%">26.9</td><td style="--h:18%">11.1</td></tr>
-          <tr><th scope="row" data-def="A needed object was never found" tabindex="0">Object not found</th><td style="--h:18%">10.9</td><td class="max" style="--h:37%">22.4</td><td style="--h:21%">12.4</td></tr>
-          <tr><th scope="row" data-def="Stuck, or kept executing without progress" tabindex="0">Insufficient planning</th><td style="--h:2%">0.9</td><td style="--h:17%">10.0</td><td class="max" style="--h:20%">11.8</td></tr>
-          <tr><th scope="row" data-def="Tree of Hypotheses returned no usable goals (Tru-POMDP only)" tabindex="0">No hypotheses</th><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td><td class="max" style="--h:30%">17.8</td></tr>
-          <tr><th scope="row" data-def="Used a distractor instead of the task object" tabindex="0">Wrong object</th><td style="--h:2%">0.9</td><td style="--h:4%">2.4</td><td class="max" style="--h:6%">3.6</td></tr>
-          <tr><th scope="row" data-def="A step was done after the step it had to precede" tabindex="0">Wrong order</th><td class="max" style="--h:5%">2.9</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
-          <tr><th scope="row" data-def="Kept planning or searching after evidence said to abandon" tabindex="0">Failure to stop</th><td class="max" style="--h:3%">2.0</td><td style="--h:0%">0.0</td><td style="--h:1%">0.4</td></tr>
+          <tr><th scope="row" data-def="Found the object but never put it where the task needs it: never moved it, or still held it at the end." tabindex="0">Object not placed</th><td style="--h:22%">12.9</td><td class="max" style="--h:58%">34.9</td><td style="--h:51%">30.4</td></tr>
+          <tr><th scope="row" data-def="A required action on an object was skipped, such as heating it or switching it off. A failed attempt doesn’t count." tabindex="0">Missing action</th><td style="--h:34%">20.4</td><td class="max" style="--h:55%">32.7</td><td style="--h:41%">24.4</td></tr>
+          <tr><th scope="row" data-def="An object was placed in the wrong location." tabindex="0">Incorrect placement</th><td class="max" style="--h:49%">29.3</td><td style="--h:45%">26.9</td><td style="--h:18%">11.1</td></tr>
+          <tr><th scope="row" data-def="An object that a failed requirement needs was never found." tabindex="0">Object not found</th><td style="--h:18%">10.9</td><td class="max" style="--h:37%">22.4</td><td style="--h:21%">12.4</td></tr>
+          <tr><th scope="row" data-def="The planner got stuck or continued unproductive execution instead of advancing." tabindex="0">Insufficient planning</th><td style="--h:2%">0.9</td><td style="--h:17%">10.0</td><td class="max" style="--h:20%">11.8</td></tr>
+          <tr><th scope="row" data-def="Tru-POMDP only: the Tree of Hypotheses returned no usable goal guesses, so it stopped before acting." tabindex="0">No hypotheses</th><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td><td class="max" style="--h:30%">17.8</td></tr>
+          <tr><th scope="row" data-def="Used a distractor instead of the actual task object. Approved substitutes count as correct." tabindex="0">Wrong object</th><td style="--h:2%">0.9</td><td style="--h:4%">2.4</td><td class="max" style="--h:6%">3.6</td></tr>
+          <tr><th scope="row" data-def="A required step was done, but only after the step it had to come before." tabindex="0">Wrong order</th><td class="max" style="--h:5%">2.9</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
+          <tr><th scope="row" data-def="Kept planning or searching after evidence indicated the subgoal should be abandoned." tabindex="0">Failure to stop</th><td class="max" style="--h:3%">2.0</td><td style="--h:0%">0.0</td><td style="--h:1%">0.4</td></tr>
         </tbody>
       </table>
       </div>
@@ -396,11 +396,11 @@
         <caption>Inefficiencies <span>&middot; % of all runs</span></caption>
         <thead><tr><th>Finding</th><th class="react">ReAct<small>n=450</small></th><th class="vlm">VLM-TAMP<small>n=450</small></th><th class="tru">Tru-POMDP<small>n=450</small></th></tr></thead>
         <tbody>
-          <tr><th scope="row" data-def="No task, exploration, or recovery purpose" tabindex="0">Unnecessary actions</th><td style="--h:44%">26.2</td><td style="--h:31%">18.4</td><td class="max" style="--h:87%">52.4</td></tr>
-          <tr><th scope="row" data-def="Tried an action without its prerequisites" tabindex="0">Precondition error</th><td class="max" style="--h:77%">46.0</td><td style="--h:23%">13.8</td><td style="--h:38%">23.1</td></tr>
-          <tr><th scope="row" data-def="Same action or sequence several times in a row" tabindex="0">Repeated actions</th><td style="--h:4%">2.4</td><td style="--h:50%">30.2</td><td class="max" style="--h:68%">41.1</td></tr>
-          <tr><th scope="row" data-def="Kept going after it should have stopped (successful runs)" tabindex="0">Failure to stop</th><td style="--h:4%">2.4</td><td style="--h:0%">0.0</td><td class="max" style="--h:6%">3.6</td></tr>
-          <tr><th scope="row" data-def="Tried to use an object that does not exist" tabindex="0">Hallucinated object</th><td class="max" style="--h:0%">0.2</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
+          <tr><th scope="row" data-def="Completed actions with no useful task, exploration, or recovery purpose." tabindex="0">Unnecessary actions</th><td style="--h:44%">26.2</td><td style="--h:31%">18.4</td><td class="max" style="--h:87%">52.4</td></tr>
+          <tr><th scope="row" data-def="Tried an action without valid prerequisites, such as picking an object before navigating within reach." tabindex="0">Precondition error</th><td class="max" style="--h:77%">46.0</td><td style="--h:23%">13.8</td><td style="--h:38%">23.1</td></tr>
+          <tr><th scope="row" data-def="Output the exact same action, or the exact same sequence of actions, several times in a row." tabindex="0">Repeated actions</th><td style="--h:4%">2.4</td><td style="--h:50%">30.2</td><td class="max" style="--h:68%">41.1</td></tr>
+          <tr><th scope="row" data-def="Kept planning or searching after it should have stopped, in a run that still succeeded." tabindex="0">Failure to stop</th><td style="--h:4%">2.4</td><td style="--h:0%">0.0</td><td class="max" style="--h:6%">3.6</td></tr>
+          <tr><th scope="row" data-def="Tried to use an object that does not exist. Stale objects from outdated memory don’t count." tabindex="0">Hallucinated object</th><td class="max" style="--h:0%">0.2</td><td style="--h:0%">0.0</td><td style="--h:0%">0.0</td></tr>
         </tbody>
       </table>
       </div>
